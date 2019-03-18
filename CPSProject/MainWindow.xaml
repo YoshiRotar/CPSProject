@@ -1,0 +1,40 @@
+﻿<Window x:Class="CPSProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:local="clr-namespace:CPSProject"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1440">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="538" Margin="0,331,0,0" VerticalAlignment="Top" Width="1432">
+            <TabItem Header="Rzeczywiste">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="911*"/>
+                        <ColumnDefinition Width="515*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:PlotView Name="RealPlot" Model="{Binding PlotModel}" Margin="10" Grid.Column="0"/>
+                    <oxy:PlotView Name="RealHistogram" Model="{Binding PlotModel}" Margin="10" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Urojone">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="911*"/>
+                        <ColumnDefinition Width="515*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:PlotView Name="ImaginePlot" Model="{Binding PlotModel}" Margin="10" Grid.Column="0"/>
+                    <oxy:PlotView Name="ImagineHistogram" Model="{Binding PlotModel}" Margin="10" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <ComboBox HorizontalAlignment="Left" Margin="46,41,0,0" VerticalAlignment="Top" Width="158" Height="34"/>
+        <ComboBox HorizontalAlignment="Left" Margin="480,41,0,0" VerticalAlignment="Top" Width="158" Height="34"/>
+        <Label Content="Pierwszy Sygnał" HorizontalAlignment="Left" Margin="46,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Drugi Sygnał" HorizontalAlignment="Left" Margin="480,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Operacje na sygnałach" HorizontalAlignment="Left" Margin="982,10,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
