@@ -7,12 +7,37 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data
 {
-    public class UnitaryNoise
+    public class UnitaryNoise : ISignal
     {
-        public int Amplitude { get; set; }
-        public int StartingMoment { get; set; }
-        public int Duration { get; set; }
+        public double Frequency { get; set; }
+        public double Amplitude { get; set; }
+        public double StartingMoment { get; set; }
+        public double Duration { get; set; }
+        public List<Tuple<double, Complex>> Points { get; set; }
 
-        //DataPoint 
+        public UnitaryNoise(double f, double a, double t1, double d)
+        {
+            Frequency = f;
+            Amplitude = a;
+            StartingMoment = t1;
+            Duration = d;
+
+            for(double i = StartingMoment; i <= StartingMoment + Duration; i += Frequency)
+            {
+                Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
+            }
+        }
+
+        public Complex GenerateSignal(double t)
+        {
+            Complex result;
+            Random random = new Random();
+            result = new Complex
+            {
+                Real = 2 * Amplitude * random.NextDouble() - Amplitude,
+                Imaginary = 0
+            };
+            return result;
+        }
     }
 }
