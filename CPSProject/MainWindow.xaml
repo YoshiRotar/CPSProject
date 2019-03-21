@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
-        xmlns:local="clr-namespace:CPSProject"
+        xmlns:local="clr-namespace:CPSProject.Controller"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1440">
+    <Window.DataContext>
+        <local:ChartController/>
+    </Window.DataContext>
     <Grid>
         <TabControl HorizontalAlignment="Left" Height="538" Margin="0,331,0,0" VerticalAlignment="Top" Width="1432">
             <TabItem Header="Rzeczywiste">
@@ -30,11 +33,71 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <ComboBox HorizontalAlignment="Left" Margin="46,41,0,0" VerticalAlignment="Top" Width="158" Height="34"/>
-        <ComboBox HorizontalAlignment="Left" Margin="480,41,0,0" VerticalAlignment="Top" Width="158" Height="34"/>
-        <Label Content="Pierwszy Sygnał" HorizontalAlignment="Left" Margin="46,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Drugi Sygnał" HorizontalAlignment="Left" Margin="480,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="Operacje na sygnałach" HorizontalAlignment="Left" Margin="982,10,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="ComboFirstSignal" SelectedIndex="{Binding Path=FirstChartID}" HorizontalAlignment="Left" Margin="46,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
+            <ComboBoxItem Name="UniformNoise1">Szum o rozkładzie jednostajnym</ComboBoxItem>
+        </ComboBox>
+        <ComboBox HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
+            <ComboBoxItem Name="UniformNoise2">Szum o rozkładzie jednostajnym</ComboBoxItem>
+        </ComboBox>
+        <Label Content="Pierwszy Sygnał:" HorizontalAlignment="Left" Margin="46,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Drugi Sygnał:" HorizontalAlignment="Left" Margin="480,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Operacje na sygnałach:" HorizontalAlignment="Left" Margin="982,10,0,0" VerticalAlignment="Top"/>
+        <StackPanel HorizontalAlignment="Left" Height="255" Margin="46,71,0,0" VerticalAlignment="Top" Width="96">
+            <Grid Margin="0,2,0,2">
+                <Label Content="A:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="t1:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="d:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=DurationText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+        </StackPanel>
+        <Button Content="Rysuj" Command="{Binding Path=DrawCommand}" HorizontalAlignment="Left" Margin="236,71,0,0" VerticalAlignment="Top" Width="75">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedIndex}" Value="-1">
+                            <Setter Property="Grid.Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
     </Grid>
 </Window>
