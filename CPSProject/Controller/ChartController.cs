@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OxyPlot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,7 @@ namespace CPSProject.Controller
         public string AmplitudeText { get; set; }
         public string StartingMomentText { get; set; }
         public string DurationText { get; set; }
+        public PlotModel RealPlotModel { get; set; }
 
 
         private bool CanDraw()
@@ -49,7 +51,7 @@ namespace CPSProject.Controller
 
         private void Draw()
         {
-            Console.WriteLine(amplitude + " " + startingMoment + " " + duration);
+            //RealPlotModel;
         }
     }
 }

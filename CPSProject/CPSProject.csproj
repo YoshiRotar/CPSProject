@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Controller\ChartController.cs" />
     <Compile Include="Controller\RelayCommand.cs" />
+    <Compile Include="Data\UnitaryNoise.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -103,8 +104,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

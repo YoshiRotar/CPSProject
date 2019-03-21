@@ -18,7 +18,7 @@
                         <ColumnDefinition Width="911*"/>
                         <ColumnDefinition Width="515*"/>
                     </Grid.ColumnDefinitions>
-                    <oxy:PlotView Name="RealPlot" Model="{Binding PlotModel}" Margin="10" Grid.Column="0"/>
+                    <oxy:PlotView Name="RealPlot" Model="{Binding RealPlotModel}" Margin="10" Grid.Column="0"/>
                     <oxy:PlotView Name="RealHistogram" Model="{Binding PlotModel}" Margin="10" Grid.Column="1"/>
                 </Grid>
             </TabItem>
