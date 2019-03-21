@@ -1,5 +1,6 @@
 ﻿using CPSProject.Data;
 using OxyPlot;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,13 +57,18 @@ namespace CPSProject.Controller
         private void Draw()
         {
             UnitaryNoise unitaryNoise = new UnitaryNoise(frequency, amplitude, startingMoment, duration);
-            List<Tuple<double, double>> realUniversum = new List<Tuple<double, double>>();
-            List<Tuple<double, double>> imaginaryUniversum = new List<Tuple<double, double>>();
+            List<DataPoint> realUniversum = new List<DataPoint>();
+            List<DataPoint> imaginaryUniversum = new List<DataPoint>();
             foreach(Tuple<double, Complex> tuple in unitaryNoise.Points)
             {
-                realUniversum.Add(new Tuple<double, double>(tuple.Item1, tuple.Item2.Real));
-                imaginaryUniversum.Add(new Tuple<double, double>(tuple.Item1, tuple.Item2.Imaginary));
+                realUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
+            RealPlotModel.Axes.Clear();
+            LineSeries realSeries = new LineSeries();
+            realSeries.Points.AddRange(realUniversum);
+            realSeries.Color = OxyColors.Blue;
+            RealPlotModel.Series.Add(realSeries);
         }
     }
 }
