@@ -35,6 +35,11 @@
         </TabControl>
         <ComboBox Name="ComboFirstSignal" SelectedIndex="{Binding Path=FirstChartID}" HorizontalAlignment="Left" Margin="46,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise1">Szum o rozkładzie jednostajnym</ComboBoxItem>
+            <ComboBoxItem Name="GaussianNoise1">Szum o rozkładzie gaussowskim</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignal1">Sygnał sinusoidalny</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignalHalfRectified1">Sygnał sinusoidalny wyprostowany jednopołówkowo</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignalFullRectified1">Sygnał sinusoidalny wyprostowany dwupołówkowo</ComboBoxItem>
+            <ComboBoxItem Name="RectangularSignal1">Sygnał prostokątny</ComboBoxItem>
         </ComboBox>
         <ComboBox HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise2">Szum o rozkładzie jednostajnym</ComboBoxItem>
@@ -62,9 +67,32 @@
                 <TextBox Text="{Binding Path=AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
+                        <Setter Property="Grid.Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedIndex}" Value="-1">
+                                <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid  Margin="0,2,0,2">
+                <Label Content="T:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=PeriodText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalHalfRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalFullRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -81,6 +109,21 @@
                             <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="GaussianNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalHalfRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalFullRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
@@ -93,6 +136,35 @@
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="GaussianNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalHalfRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalFullRectified1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="kw:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>

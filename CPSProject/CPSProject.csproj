@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
     </Reference>
@@ -43,6 +46,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -72,8 +77,13 @@
     <Compile Include="Controller\ChartController.cs" />
     <Compile Include="Controller\RelayCommand.cs" />
     <Compile Include="Data\Complex.cs" />
-    <Compile Include="Data\ISignal.cs" />
-    <Compile Include="Data\UnitaryNoise.cs" />
+    <Compile Include="Data\Signal\GaussianNoise.cs" />
+    <Compile Include="Data\Signal\ISignal.cs" />
+    <Compile Include="Data\Signal\RectangularSignal.cs" />
+    <Compile Include="Data\Signal\SinusoidalSignal.cs" />
+    <Compile Include="Data\Signal\SinusoidalSignalFullRectified.cs" />
+    <Compile Include="Data\Signal\SinusoidalSignalHalfRectified.cs" />
+    <Compile Include="Data\Signal\UnitaryNoise.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
