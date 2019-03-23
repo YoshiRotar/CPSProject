@@ -40,6 +40,11 @@
             <ComboBoxItem Name="SinusoidalSignalHalfRectified1">Sygnał sinusoidalny wyprostowany jednopołówkowo</ComboBoxItem>
             <ComboBoxItem Name="SinusoidalSignalFullRectified1">Sygnał sinusoidalny wyprostowany dwupołówkowo</ComboBoxItem>
             <ComboBoxItem Name="RectangularSignal1">Sygnał prostokątny</ComboBoxItem>
+            <ComboBoxItem Name="RectangularSimetricalSignal1">Sygnał prostokątny symetryczny</ComboBoxItem>
+            <ComboBoxItem Name="TriangularSignal1">Sygnał trójkątny</ComboBoxItem>
+            <ComboBoxItem Name="StepFunctionSignal1">Skok jednostkowy</ComboBoxItem>
+            <ComboBoxItem Name="KroneckerDelta1">Impuls jednostkowy</ComboBoxItem>
+            <ComboBoxItem Name="ImpulseNoise1">Szum impulsowy</ComboBoxItem>
         </ComboBox>
         <ComboBox HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise2">Szum o rozkładzie jednostajnym</ComboBoxItem>
@@ -95,6 +100,12 @@
                             <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSimetricalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="TriangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
@@ -104,25 +115,10 @@
                 <TextBox Text="{Binding Path=StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
-                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Setter Property="Grid.Visibility" Value="Visible"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="UniformNoise1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="GaussianNoise1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignal1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalHalfRectified1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="SinusoidalSignalFullRectified1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
-                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedIndex}" Value="-1">
+                                <Setter Property="Grid.Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -153,6 +149,18 @@
                             <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSimetricalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="TriangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="StepFunctionSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="ImpulseNoise1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
@@ -165,6 +173,68 @@
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="RectangularSimetricalSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="TriangularSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="ts:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="StepFunctionSignal1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="ns:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="KroneckerDelta1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="l:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="KroneckerDelta1">
+                                <Setter Property="Grid.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Label Content="p:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="Grid.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ComboFirstSignal, Path=SelectedItem.Name}" Value="ImpulseNoise1">
                                 <Setter Property="Grid.Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>

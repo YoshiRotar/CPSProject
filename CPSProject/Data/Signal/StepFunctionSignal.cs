@@ -6,25 +6,23 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class RectangularSignal : ISignal
+    public class StepFunctionSignal : ISignal
     {
         public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double Period { get; set; }
         public double StartingMoment { get; set; }
         public double Duration { get; set; }
-        public double DutyCycle { get; set; }
+        public double TimeOfStep { get; set; }
         public List<Tuple<double, Complex>> Points { get; set; }
 
-        public RectangularSignal(double f, double A, double T, double t1, double d, double kw)
+        public StepFunctionSignal(double f, double A, double t1, double d, double ts)
         {
             Frequency = f;
             Amplitude = A;
-            Period = T;
             StartingMoment = t1;
             Duration = d;
-            DutyCycle = kw;
+            TimeOfStep = ts;
             Points = new List<Tuple<double, Complex>>();
 
             for (double i = StartingMoment; i <= StartingMoment + Duration; i += Frequency)
@@ -39,8 +37,9 @@ namespace CPSProject.Data.Signal
 
             double value;
 
-            if (t%Period >= StartingMoment && t%Period < DutyCycle * Period + StartingMoment) value = Amplitude;
-            else value = 0;
+            if (t > TimeOfStep) value = Amplitude;
+            else if (t < TimeOfStep) value = 0;
+            else value = 0.5 * Amplitude;
 
             result = new Complex
             {

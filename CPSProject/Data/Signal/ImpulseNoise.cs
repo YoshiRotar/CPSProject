@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class RectangularSignal : ISignal
+    public class ImpulseNoise : ISignal
     {
-        public bool IsLinear { get; set; } = true;
+        Random random = new Random();
+
+        public bool IsLinear { get; set; } = false;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double Period { get; set; }
         public double StartingMoment { get; set; }
         public double Duration { get; set; }
-        public double DutyCycle { get; set; }
+        public double Probability { get; set; }
         public List<Tuple<double, Complex>> Points { get; set; }
 
-        public RectangularSignal(double f, double A, double T, double t1, double d, double kw)
+        public ImpulseNoise(double f, double A, double t1, double d, double p)
         {
             Frequency = f;
             Amplitude = A;
-            Period = T;
             StartingMoment = t1;
             Duration = d;
-            DutyCycle = kw;
+            Probability = p;
             Points = new List<Tuple<double, Complex>>();
 
             for (double i = StartingMoment; i <= StartingMoment + Duration; i += Frequency)
@@ -39,7 +39,7 @@ namespace CPSProject.Data.Signal
 
             double value;
 
-            if (t%Period >= StartingMoment && t%Period < DutyCycle * Period + StartingMoment) value = Amplitude;
+            if (1 - random.NextDouble() <= Probability) value = Amplitude;
             else value = 0;
 
             result = new Complex

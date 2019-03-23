@@ -77,12 +77,17 @@
     <Compile Include="Controller\ChartController.cs" />
     <Compile Include="Controller\RelayCommand.cs" />
     <Compile Include="Data\Complex.cs" />
+    <Compile Include="Data\Signal\ImpulseNoise.cs" />
+    <Compile Include="Data\Signal\KroneckerDelta.cs" />
     <Compile Include="Data\Signal\GaussianNoise.cs" />
     <Compile Include="Data\Signal\ISignal.cs" />
     <Compile Include="Data\Signal\RectangularSignal.cs" />
+    <Compile Include="Data\Signal\RectangularSimetricalSignal.cs" />
     <Compile Include="Data\Signal\SinusoidalSignal.cs" />
     <Compile Include="Data\Signal\SinusoidalSignalFullRectified.cs" />
     <Compile Include="Data\Signal\SinusoidalSignalHalfRectified.cs" />
+    <Compile Include="Data\Signal\StepFunctionSignal.cs" />
+    <Compile Include="Data\Signal\TriangularSignal.cs" />
     <Compile Include="Data\Signal\UnitaryNoise.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

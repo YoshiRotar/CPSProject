@@ -8,6 +8,7 @@ namespace CPSProject.Data.Signal
 {
     public class SinusoidalSignalHalfRectified : ISignal
     {
+        public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Period { get; set; }

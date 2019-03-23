@@ -11,6 +11,7 @@ namespace CPSProject.Data.Signal
     {
         Random random = new Random();
 
+        public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double StartingMoment { get; set; }

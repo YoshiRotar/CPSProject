@@ -11,6 +11,7 @@ namespace CPSProject.Data.Signal
     {
         Normal gaussianRandom = new Normal();
 
+        public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double StartingMoment { get; set; }

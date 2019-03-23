@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class RectangularSignal : ISignal
+    public class TriangularSignal : ISignal
     {
         public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
@@ -17,7 +17,7 @@ namespace CPSProject.Data.Signal
         public double DutyCycle { get; set; }
         public List<Tuple<double, Complex>> Points { get; set; }
 
-        public RectangularSignal(double f, double A, double T, double t1, double d, double kw)
+        public TriangularSignal(double f, double A, double T, double t1, double d, double kw)
         {
             Frequency = f;
             Amplitude = A;
@@ -39,8 +39,8 @@ namespace CPSProject.Data.Signal
 
             double value;
 
-            if (t%Period >= StartingMoment && t%Period < DutyCycle * Period + StartingMoment) value = Amplitude;
-            else value = 0;
+            if (t % Period >= StartingMoment && t % Period < DutyCycle * Period + StartingMoment) value = (Amplitude / (DutyCycle * Period)) * (t % Period - StartingMoment);
+            else value = (-Amplitude / ((1 - DutyCycle) * Period) * (t % Period - StartingMoment)) + (Amplitude / (1 - DutyCycle));
 
             result = new Complex
             {

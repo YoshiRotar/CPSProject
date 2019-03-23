@@ -8,6 +8,7 @@ namespace CPSProject.Data.Signal
 {
     public interface ISignal
     {
+        bool IsLinear { get; set; }
         List<Tuple<double, Complex>> Points { get; set; }
         Complex GenerateSignal(double t);
     }
