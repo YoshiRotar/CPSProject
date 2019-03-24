@@ -39,7 +39,9 @@ namespace CPSProject.Data.Signal
 
             double value;
 
-            if (t % Period >= StartingMoment && t % Period < DutyCycle * Period + StartingMoment) value = Amplitude;
+            double relativeTime = (t - StartingMoment) % Period;
+
+            if (relativeTime >= 0 && relativeTime < DutyCycle * Period) value = Amplitude;
             else value = -Amplitude;
 
             result = new Complex

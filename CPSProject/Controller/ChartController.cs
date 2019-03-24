@@ -27,6 +27,7 @@ namespace CPSProject.Controller
         private int numberOfSample;
         private ICommand drawCommand;
         private PlotModel realPlotModel;
+        private PlotModel imaginaryPlotModel;
         public event PropertyChangedEventHandler PropertyChanged;
 
         ISignal SignalToDraw { get; set; }
@@ -69,30 +70,25 @@ namespace CPSProject.Controller
             }
         }
 
-
+        public PlotModel ImaginaryPlotModel
+        {
+            get
+            {
+                return imaginaryPlotModel;
+            }
+            set
+            {
+                imaginaryPlotModel = value;
+                OnPropertyChanged("ImaginaryPlotModel");
+            }
+        }
 
         public ChartController()
         {
             FirstChartID = -1;
-            CategoryAxis signalAxis = new CategoryAxis()
-            {
-                Position = AxisPosition.Left,
-                Minimum = 0,
-                MinimumMinorStep = 1,
-                AbsoluteMinimum = 0,
-                TicklineColor = OxyColors.Transparent,
-            };
-            var timeAxis = new LinearAxis()
-            {
-                Position = AxisPosition.Bottom,
-                Minimum = 0,
-                MinimumMajorStep = 1,
-                AbsoluteMinimum = 0,
-            };
 
             realPlotModel = new PlotModel();
-            realPlotModel.Axes.Add(signalAxis);
-            realPlotModel.Axes.Add(timeAxis);
+            imaginaryPlotModel = new PlotModel();
         }
 
         private bool CanDraw()
@@ -212,15 +208,31 @@ namespace CPSProject.Controller
             }
             RealPlotModel.Axes.Clear();
             RealPlotModel.Series.Clear();
-            LineSeries realSeries;
+            ImaginaryPlotModel.Axes.Clear();
+            ImaginaryPlotModel.Series.Clear();
 
-            if (SignalToDraw.IsLinear) realSeries = new LineSeries();
-            else realSeries = new StemSeries();
+            LineSeries realSeries;
+            LineSeries imaginarySeries;
+
+            if (SignalToDraw.IsLinear)
+            {
+                realSeries = new LineSeries();
+                imaginarySeries = new LineSeries();
+            }
+            else
+            {
+                realSeries = new StemSeries();
+                imaginarySeries = new StemSeries();
+            }
 
             realSeries.Color = OxyColors.Blue;
+            imaginarySeries.Color = OxyColors.Blue;
             realSeries.Points.AddRange(realUniversum);
+            imaginarySeries.Points.AddRange(imaginaryUniversum);
             RealPlotModel.Series.Add(realSeries);
+            ImaginaryPlotModel.Series.Add(imaginarySeries);
             RealPlotModel.InvalidatePlot(true);
+            ImaginaryPlotModel.InvalidatePlot(true);
         }
 
 
