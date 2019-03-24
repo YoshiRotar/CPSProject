@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using CPSProject.Data.Signal.Bases;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
