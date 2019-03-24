@@ -76,6 +76,8 @@
     </Compile>
     <Compile Include="Controller\ChartController.cs" />
     <Compile Include="Controller\RelayCommand.cs" />
+    <Compile Include="Controller\SignalTextProperties.cs" />
+    <Compile Include="Controller\SignalRepresentation.cs" />
     <Compile Include="Data\Complex.cs" />
     <Compile Include="Data\Signal\ImpulseNoise.cs" />
     <Compile Include="Data\Signal\KroneckerDelta.cs" />

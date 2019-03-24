@@ -15,45 +15,48 @@ namespace CPSProject.Controller
 {
     public class ChartController
     {
-        private double frequency;
-        private double amplitude;
-        private double period;
-        private double startingMoment;
-        private double duration;
-        private double dutyCycle;
-        private double timeOfStep;
-        private double probability;
-        private int numberOfAllSamples;
-        private int numberOfSample;
-        private ICommand drawCommand;
+        private ICommand drawCommand1;
+        private ICommand drawCommand2;
+        private SignalRepresentation firstSignal;
+        private SignalRepresentation secondSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
+        private LineSeries realSeries1;
+        private LineSeries imaginarySeries1;
+        private LineSeries realSeries2;
+        private LineSeries imaginarySeries2;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        ISignal SignalToDraw { get; set; }
+        
         public int FirstChartID { get; set; }
-        public string FrequencyText { get; set; }
-        public string AmplitudeText { get; set; }
-        public string PeriodText { get; set; }
-        public string StartingMomentText { get; set; }
-        public string DurationText { get; set; }
-        public string DutyCycleText { get; set; }
-        public string TimeOfStepText { get; set; }
-        public string ProbabilityText { get; set; }
-        public string NumberOfAllSamplesText { get; set; }
-        public string NumberOfSampleText { get; set; }
+        public int SecondChartID { get; set; }
+        public SignalTextProperties TextProperties1 { get; set; }
+        public SignalTextProperties TextProperties2 { get; set; }
 
-        public ICommand DrawCommand
+        public ICommand DrawCommand1
         {
             get
             {
-                if(drawCommand == null)
+                if(drawCommand1 == null)
                 {
-                    drawCommand = new RelayCommand(
-                        param => Draw(),
-                        param => CanDraw());
+                    drawCommand1 = new RelayCommand(
+                        param => Draw(firstSignal.Signal, realSeries1, imaginarySeries1, OxyColors.Blue),
+                        param => firstSignal.CanDraw(FirstChartID,TextProperties1));
                 }
-                return drawCommand;
+                return drawCommand1;
+            }
+        }
+
+        public ICommand DrawCommand2
+        {
+            get
+            {
+                if (drawCommand2 == null)
+                {
+                    drawCommand2 = new RelayCommand(
+                        param => Draw(secondSignal.Signal, realSeries2, imaginarySeries2, OxyColors.Red),
+                        param => secondSignal.CanDraw(SecondChartID, TextProperties2));
+                }
+                return drawCommand2;
             }
         }
 
@@ -86,135 +89,39 @@ namespace CPSProject.Controller
         public ChartController()
         {
             FirstChartID = -1;
+            SecondChartID = -1;
 
+            firstSignal = new SignalRepresentation();
+            secondSignal = new SignalRepresentation();
+            TextProperties1 = new SignalTextProperties();
+            TextProperties2 = new SignalTextProperties();
+
+            realSeries1 = new LineSeries();
+            realSeries2 = new LineSeries();
+            imaginarySeries1 = new LineSeries();
+            imaginarySeries2 = new LineSeries();
             realPlotModel = new PlotModel();
             imaginaryPlotModel = new PlotModel();
+
+            RealPlotModel.Series.Add(realSeries1);
+            RealPlotModel.Series.Add(realSeries2);
+            ImaginaryPlotModel.Series.Add(imaginarySeries1);
+            ImaginaryPlotModel.Series.Add(imaginarySeries2);
         }
 
-        private bool CanDraw()
-        {
-            if (FirstChartID == -1) return false;
-            if (FirstChartID == 0)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                SignalToDraw = new UnitaryNoise(frequency, amplitude, startingMoment, duration);
-            }
-            if (FirstChartID == 1)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                SignalToDraw = new GaussianNoise(frequency, amplitude, startingMoment, duration);
-            }
-            if (FirstChartID == 2)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                SignalToDraw = new SinusoidalSignal(frequency, amplitude, period, startingMoment, duration);
-            }
-            if (FirstChartID == 3)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                SignalToDraw = new SinusoidalSignalHalfRectified(frequency, amplitude, period, startingMoment, duration);
-            }
-            if (FirstChartID == 4)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                SignalToDraw = new SinusoidalSignalFullRectified(frequency, amplitude, period, startingMoment, duration);
-            }
-            if (FirstChartID == 5)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                if (!double.TryParse(DutyCycleText, out dutyCycle)) return false;
-                SignalToDraw = new RectangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
-            }
-            if (FirstChartID == 6)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                if (!double.TryParse(DutyCycleText, out dutyCycle)) return false;
-                SignalToDraw = new RectangularSimetricalSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
-            }
-            if (FirstChartID == 7)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(PeriodText, out period)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                if (!double.TryParse(DutyCycleText, out dutyCycle)) return false;
-                SignalToDraw = new TriangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
-            }
-            if (FirstChartID == 8)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                if (!double.TryParse(TimeOfStepText, out timeOfStep)) return false;
-                SignalToDraw = new StepFunctionSignal(frequency, amplitude, startingMoment, duration, timeOfStep);
-            }
-            if (FirstChartID == 9)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!int.TryParse(NumberOfAllSamplesText, out numberOfAllSamples)) return false;
-                if (!int.TryParse(NumberOfSampleText, out numberOfSample)) return false;
-                SignalToDraw = new KroneckerDelta(frequency, amplitude, startingMoment, numberOfAllSamples, numberOfSample);
-            }
-            if (FirstChartID == 10)
-            {
-                if (!double.TryParse(FrequencyText, out frequency)) return false;
-                if (!double.TryParse(AmplitudeText, out amplitude)) return false;
-                if (!double.TryParse(StartingMomentText, out startingMoment)) return false;
-                if (!double.TryParse(DurationText, out duration)) return false;
-                if (!double.TryParse(ProbabilityText, out probability)) return false;
-                SignalToDraw = new ImpulseNoise(frequency, amplitude, startingMoment, duration, probability);
-            }
-            return true;
-        }
-
-        private void Draw()
+        private void Draw(ISignal signal, LineSeries realSeries, LineSeries imaginarySeries, OxyColor color)
         {
             List<DataPoint> realUniversum = new List<DataPoint>();
             List<DataPoint> imaginaryUniversum = new List<DataPoint>();
-            foreach(Tuple<double, Complex> tuple in SignalToDraw.Points)
+            foreach(Tuple<double, Complex> tuple in signal.Points)
             {
                 realUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
-            RealPlotModel.Axes.Clear();
-            RealPlotModel.Series.Clear();
-            ImaginaryPlotModel.Axes.Clear();
-            ImaginaryPlotModel.Series.Clear();
+            //RealPlotModel.Series.Remove(realSeries);
+            //ImaginaryPlotModel.Series.Remove(imaginarySeries);
 
-            LineSeries realSeries;
-            LineSeries imaginarySeries;
-
-            if (SignalToDraw.IsLinear)
+            if (signal.IsLinear)
             {
                 realSeries = new LineSeries();
                 imaginarySeries = new LineSeries();
@@ -225,12 +132,12 @@ namespace CPSProject.Controller
                 imaginarySeries = new StemSeries();
             }
 
-            realSeries.Color = OxyColors.Blue;
-            imaginarySeries.Color = OxyColors.Blue;
+            realSeries.Color = color;
+            imaginarySeries.Color = color;
             realSeries.Points.AddRange(realUniversum);
             imaginarySeries.Points.AddRange(imaginaryUniversum);
-            RealPlotModel.Series.Add(realSeries);
-            ImaginaryPlotModel.Series.Add(imaginarySeries);
+            //RealPlotModel.Series.Add(realSeries);
+            //ImaginaryPlotModel.Series.Add(imaginarySeries);
             RealPlotModel.InvalidatePlot(true);
             ImaginaryPlotModel.InvalidatePlot(true);
         }

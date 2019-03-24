@@ -46,8 +46,18 @@
             <ComboBoxItem Name="KroneckerDelta1">Impuls jednostkowy</ComboBoxItem>
             <ComboBoxItem Name="ImpulseNoise1">Szum impulsowy</ComboBoxItem>
         </ComboBox>
-        <ComboBox HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
+        <ComboBox Name="ComboSecondSignal" SelectedIndex="{Binding Path=SecondChartID}" HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise2">Szum o rozkładzie jednostajnym</ComboBoxItem>
+            <ComboBoxItem Name="GaussianNoise2">Szum o rozkładzie gaussowskim</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignal2">Sygnał sinusoidalny</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignalHalfRectified2">Sygnał sinusoidalny wyprostowany jednopołówkowo</ComboBoxItem>
+            <ComboBoxItem Name="SinusoidalSignalFullRectified2">Sygnał sinusoidalny wyprostowany dwupołówkowo</ComboBoxItem>
+            <ComboBoxItem Name="RectangularSignal2">Sygnał prostokątny</ComboBoxItem>
+            <ComboBoxItem Name="RectangularSimetricalSignal2">Sygnał prostokątny symetryczny</ComboBoxItem>
+            <ComboBoxItem Name="TriangularSignal2">Sygnał trójkątny</ComboBoxItem>
+            <ComboBoxItem Name="StepFunctionSignal2">Skok jednostkowy</ComboBoxItem>
+            <ComboBoxItem Name="KroneckerDelta2">Impuls jednostkowy</ComboBoxItem>
+            <ComboBoxItem Name="ImpulseNoise2">Szum impulsowy</ComboBoxItem>
         </ComboBox>
         <Label Content="Pierwszy Sygnał:" HorizontalAlignment="Left" Margin="46,10,0,0" VerticalAlignment="Top"/>
         <Label Content="Drugi Sygnał:" HorizontalAlignment="Left" Margin="480,10,0,0" VerticalAlignment="Top"/>
@@ -55,7 +65,7 @@
         <StackPanel HorizontalAlignment="Left" Height="255" Margin="46,71,0,0" VerticalAlignment="Top" Width="96">
             <Grid Margin="0,2,0,2">
                 <Label Content="f:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=FrequencyText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -69,7 +79,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="A:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -83,7 +93,7 @@
             </Grid>
             <Grid  Margin="0,2,0,2">
                 <Label Content="T:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=PeriodText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.PeriodText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -112,7 +122,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="t1:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -126,7 +136,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="d:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=DurationText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.DurationText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -167,7 +177,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="kw:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -187,7 +197,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="ts:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -201,7 +211,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="ns:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -215,7 +225,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="l:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -229,7 +239,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="p:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=TextProperties1.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -242,7 +252,7 @@
                 </Grid.Style>
             </Grid>
         </StackPanel>
-        <Button Content="Rysuj" Command="{Binding Path=DrawCommand}" HorizontalAlignment="Left" Margin="236,71,0,0" VerticalAlignment="Top" Width="75">
+        <Button Content="Rysuj" Command="{Binding Path=DrawCommand1}" HorizontalAlignment="Left" Margin="236,71,0,0" VerticalAlignment="Top" Width="75">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Visibility" Value="Visible"/>
@@ -254,6 +264,207 @@
                 </Style>
             </Button.Style>
         </Button>
-
+        <StackPanel HorizontalAlignment="Left" Height="255" Margin="480,71,0,0" VerticalAlignment="Top" Width="96">
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedIndex, ElementName=ComboSecondSignal}" Value="-1">
+                                <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="f:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedIndex, ElementName=ComboSecondSignal}" Value="-1">
+                                <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="A:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid  Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignalHalfRectified2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignalFullRectified2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSimetricalSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="TriangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="T:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.PeriodText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedIndex, ElementName=ComboSecondSignal}" Value="-1">
+                                <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="t1:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="UniformNoise2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="GaussianNoise2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignalHalfRectified2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="SinusoidalSignalFullRectified2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSimetricalSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="TriangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="StepFunctionSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="ImpulseNoise2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="d:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.DurationText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="RectangularSimetricalSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="TriangularSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="kw:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="StepFunctionSignal2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="ts:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="KroneckerDelta2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="ns:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="KroneckerDelta2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="l:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.Style>
+                    <Style>
+                        <Setter Property="UIElement.Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Name, ElementName=ComboSecondSignal}" Value="ImpulseNoise2">
+                                <Setter Property="UIElement.Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Label Content="p:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding Path=TextProperties2.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
+            </Grid>
+        </StackPanel>
+        <Button Content="Rysuj" Command="{Binding Path=DrawCommand2}" HorizontalAlignment="Left" Margin="670,71,0,0" VerticalAlignment="Top" Width="75">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ComboSecondSignal, Path=SelectedIndex}" Value="-1">
+                            <Setter Property="Grid.Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>
