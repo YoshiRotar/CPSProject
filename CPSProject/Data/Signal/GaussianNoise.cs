@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using CPSProject.Data.Signal.Bases;
+using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class GaussianNoise : ISignal
+    public class GaussianNoise : ContinousTraitCalculator, ISignal
     {
         Normal gaussianRandom = new Normal();
 
         public bool IsLinear { get; set; } = true;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double StartingMoment { get; set; }
         public double Duration { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
 
         public GaussianNoise(double f, double A, double t1, double d)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPSProject.Data.Signal
+namespace CPSProject.Data.Signal.Bases
 {
     public interface ISignal
     {

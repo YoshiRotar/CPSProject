@@ -1,4 +1,5 @@
 ﻿using CPSProject.Data.Signal;
+using CPSProject.Data.Signal.Bases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.AmplitudeText, out amplitude)) return false;
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
-                Signal = new UnitaryNoise(frequency, amplitude, startingMoment, duration);
+                if (frequency != 0) Signal = new UnitaryNoise(frequency, amplitude, startingMoment, duration);
+                else return false;
             }
             if (id == 1)
             {
@@ -39,7 +41,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.AmplitudeText, out amplitude)) return false;
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
-                Signal = new GaussianNoise(frequency, amplitude, startingMoment, duration);
+                if (frequency != 0) Signal = new GaussianNoise(frequency, amplitude, startingMoment, duration);
+                else return false;
             }
             if (id == 2)
             {
@@ -48,7 +51,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.PeriodText, out period)) return false;
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
-                Signal = new SinusoidalSignal(frequency, amplitude, period, startingMoment, duration);
+                if (frequency != 0) Signal = new SinusoidalSignal(frequency, amplitude, period, startingMoment, duration);
+                else return false;
             }
             if (id == 3)
             {
@@ -57,7 +61,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.PeriodText, out period)) return false;
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
-                Signal = new SinusoidalSignalHalfRectified(frequency, amplitude, period, startingMoment, duration);
+                if (frequency != 0) Signal = new SinusoidalSignalHalfRectified(frequency, amplitude, period, startingMoment, duration);
+                else return false;
             }
             if (id == 4)
             {
@@ -66,7 +71,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.PeriodText, out period)) return false;
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
-                Signal = new SinusoidalSignalFullRectified(frequency, amplitude, period, startingMoment, duration);
+                if (frequency != 0) Signal = new SinusoidalSignalFullRectified(frequency, amplitude, period, startingMoment, duration);
+                else return false;
             }
             if (id == 5)
             {
@@ -76,7 +82,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
                 if (!double.TryParse(properties.DutyCycleText, out dutyCycle)) return false;
-                Signal = new RectangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                if (frequency != 0) Signal = new RectangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                else return false;
             }
             if (id == 6)
             {
@@ -86,7 +93,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
                 if (!double.TryParse(properties.DutyCycleText, out dutyCycle)) return false;
-                Signal = new RectangularSimetricalSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                if (frequency != 0) Signal = new RectangularSimetricalSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                else return false;
             }
             if (id == 7)
             {
@@ -96,7 +104,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
                 if (!double.TryParse(properties.DutyCycleText, out dutyCycle)) return false;
-                Signal = new TriangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                if (frequency != 0) Signal = new TriangularSignal(frequency, amplitude, period, startingMoment, duration, dutyCycle);
+                else return false;
             }
             if (id == 8)
             {
@@ -105,7 +114,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
                 if (!double.TryParse(properties.TimeOfStepText, out timeOfStep)) return false;
-                Signal = new StepFunctionSignal(frequency, amplitude, startingMoment, duration, timeOfStep);
+                if (frequency != 0) Signal = new StepFunctionSignal(frequency, amplitude, startingMoment, duration, timeOfStep);
+                else return false;
             }
             if (id == 9)
             {
@@ -114,7 +124,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!int.TryParse(properties.NumberOfAllSamplesText, out numberOfAllSamples)) return false;
                 if (!int.TryParse(properties.NumberOfSampleText, out numberOfSample)) return false;
-                Signal = new KroneckerDelta(frequency, amplitude, startingMoment, numberOfAllSamples, numberOfSample);
+                if (frequency != 0) Signal = new KroneckerDelta(frequency, amplitude, startingMoment, numberOfAllSamples, numberOfSample);
+                else return false;
             }
             if (id == 10)
             {
@@ -123,7 +134,8 @@ namespace CPSProject.Controller
                 if (!double.TryParse(properties.StartingMomentText, out startingMoment)) return false;
                 if (!double.TryParse(properties.DurationText, out duration)) return false;
                 if (!double.TryParse(properties.ProbabilityText, out probability)) return false;
-                Signal = new ImpulseNoise(frequency, amplitude, startingMoment, duration, probability);
+                if (frequency != 0) Signal = new ImpulseNoise(frequency, amplitude, startingMoment, duration, probability);
+                else return false;
             }
             return true;
         }

@@ -1,5 +1,6 @@
 ﻿using CPSProject.Data;
 using CPSProject.Data.Signal;
+using CPSProject.Data.Signal.Bases;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -39,7 +40,7 @@ namespace CPSProject.Controller
                 if(drawCommand1 == null)
                 {
                     drawCommand1 = new RelayCommand(
-                        param => Draw(firstSignal.Signal, realSeries1, imaginarySeries1, OxyColors.Blue),
+                        param => Draw(firstSignal.Signal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue),
                         param => firstSignal.CanDraw(FirstChartID,TextProperties1));
                 }
                 return drawCommand1;
@@ -53,7 +54,7 @@ namespace CPSProject.Controller
                 if (drawCommand2 == null)
                 {
                     drawCommand2 = new RelayCommand(
-                        param => Draw(secondSignal.Signal, realSeries2, imaginarySeries2, OxyColors.Red),
+                        param => Draw(secondSignal.Signal, ref realSeries2, ref imaginarySeries2, OxyColors.Red),
                         param => secondSignal.CanDraw(SecondChartID, TextProperties2));
                 }
                 return drawCommand2;
@@ -109,8 +110,11 @@ namespace CPSProject.Controller
             ImaginaryPlotModel.Series.Add(imaginarySeries2);
         }
 
-        private void Draw(ISignal signal, LineSeries realSeries, LineSeries imaginarySeries, OxyColor color)
+        private void Draw(ISignal signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color)
         {
+            bool b1 = RealPlotModel.Series.Remove(realSeries);
+            bool b2 = ImaginaryPlotModel.Series.Remove(imaginarySeries);
+
             List<DataPoint> realUniversum = new List<DataPoint>();
             List<DataPoint> imaginaryUniversum = new List<DataPoint>();
             foreach(Tuple<double, Complex> tuple in signal.Points)
@@ -118,8 +122,7 @@ namespace CPSProject.Controller
                 realUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
-            //RealPlotModel.Series.Remove(realSeries);
-            //ImaginaryPlotModel.Series.Remove(imaginarySeries);
+            
 
             if (signal.IsLinear)
             {
@@ -136,8 +139,8 @@ namespace CPSProject.Controller
             imaginarySeries.Color = color;
             realSeries.Points.AddRange(realUniversum);
             imaginarySeries.Points.AddRange(imaginaryUniversum);
-            //RealPlotModel.Series.Add(realSeries);
-            //ImaginaryPlotModel.Series.Add(imaginarySeries);
+            RealPlotModel.Series.Add(realSeries);
+            ImaginaryPlotModel.Series.Add(imaginarySeries);
             RealPlotModel.InvalidatePlot(true);
             ImaginaryPlotModel.InvalidatePlot(true);
         }
