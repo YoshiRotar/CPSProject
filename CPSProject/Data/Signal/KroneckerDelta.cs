@@ -30,7 +30,7 @@ namespace CPSProject.Data.Signal
             for (int i = 1; i <= NumberOfAllSamples; i++)
             {
                 Points.Add(new Tuple<double, Complex>(Moment, GenerateSignal(i)));
-                Moment += Frequency;
+                Moment += (1 / Frequency);
             }
         }
 

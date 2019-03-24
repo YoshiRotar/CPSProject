@@ -27,7 +27,7 @@ namespace CPSProject.Data.Signal
             DutyCycle = kw;
             Points = new List<Tuple<double, Complex>>();
 
-            for (double i = StartingMoment; i <= StartingMoment + Duration; i += Frequency)
+            for (double i = StartingMoment; i <= StartingMoment + Duration; i += (1 / Frequency))
             {
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
