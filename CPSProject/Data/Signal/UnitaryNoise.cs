@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class UnitaryNoise : ISignal
+    public class UnitaryNoise : SignalWithContinousValues
     {
         Random random = new Random();
 
-        public bool IsLinear { get; set; } = true;
-        public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double StartingMoment { get; set; }
         public double Duration { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
 
         public UnitaryNoise(double f, double A, double t1, double d)
         {
+            IsLinear = true;
+
             Frequency = f;
             Amplitude = A;
             StartingMoment = t1;
@@ -31,9 +29,12 @@ namespace CPSProject.Data.Signal
             {
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
+
+            EndingMoment = StartingMoment + Duration;
+            CalculateTraits();
         }
 
-        public Complex GenerateSignal(double t)
+        public override Complex GenerateSignal(double t)
         {
             Complex result;
 

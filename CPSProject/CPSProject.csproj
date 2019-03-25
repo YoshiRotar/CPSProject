@@ -79,6 +79,7 @@
     <Compile Include="Controller\SignalTextProperties.cs" />
     <Compile Include="Controller\SignalRepresentation.cs" />
     <Compile Include="Data\Complex.cs" />
+    <Compile Include="Data\Signal\Bases\SignalWithDiscreetValues.cs" />
     <Compile Include="Data\Signal\ImpulseNoise.cs" />
     <Compile Include="Data\Signal\KroneckerDelta.cs" />
     <Compile Include="Data\Signal\GaussianNoise.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Data\Signal\SinusoidalSignalFullRectified.cs" />
     <Compile Include="Data\Signal\SinusoidalSignalHalfRectified.cs" />
     <Compile Include="Data\Signal\StepFunctionSignal.cs" />
-    <Compile Include="Data\Signal\Bases\ContinousTraitCalculator.cs" />
+    <Compile Include="Data\Signal\Bases\SignalWithContinousValues.cs" />
     <Compile Include="Data\Signal\TriangularSignal.cs" />
     <Compile Include="Data\Signal\UnitaryNoise.cs" />
     <Compile Include="MainWindow.xaml.cs">

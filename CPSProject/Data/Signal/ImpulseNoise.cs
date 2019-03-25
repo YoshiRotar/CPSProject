@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class ImpulseNoise : ISignal
+    public class ImpulseNoise : SignalWithDiscreetValues
     {
         Random random = new Random();
 
-        public bool IsLinear { get; set; } = false;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double StartingMoment { get; set; }
         public double Duration { get; set; }
         public double Probability { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
 
         public ImpulseNoise(double f, double A, double t1, double d, double p)
         {
@@ -32,9 +29,12 @@ namespace CPSProject.Data.Signal
             {
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
+
+            EndingMoment = StartingMoment + Duration;
+            CalculateTraits();
         }
 
-        public Complex GenerateSignal(double t)
+        public override Complex GenerateSignal(double t)
         {
             Complex result;
 

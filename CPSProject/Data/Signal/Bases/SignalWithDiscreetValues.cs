@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal.Bases
 {
-    public class ContinousTraitCalculator
+    public class SignalWithDiscreetValues : ISignal
     {
         public double StartingMoment { get; set; }
         public double EndingMoment { get; set; }
@@ -16,37 +16,48 @@ namespace CPSProject.Data.Signal.Bases
         public double AveragePower { get; set; }
         public double Variance { get; set; }
         public double EffectiveValue { get; set; }
+        public bool IsLinear { get; set; } = false;
 
         public void CalculateTraits()
         {
-            double prefix = 1 / (EndingMoment - StartingMoment);
-            int endingPoint = Points.FindIndex(t => t.Item1 == EndingMoment);
+            int i = 0;
+            double prefix = 1.0 / Points.Count;
 
             AverageValue = 0;
-            for(int i=0; i<=endingPoint; i++)
+            while (i < Points.Count)
             {
                 AverageValue += Points[i].Item2.Real;
+                i++;
             }
             AverageValue *= prefix;
 
             AbsouluteAverageValue = Math.Abs(AverageValue);
 
             AveragePower = 0;
-            for (int i = 0; i <= endingPoint; i++)
+            i = 0;
+            while (i < Points.Count)
             {
-                AveragePower += (Points[i].Item2.Real * Points[i].Item2.Real);
+                AveragePower += Points[i].Item2.Real * Points[i].Item2.Real;
+                i++;
             }
             AveragePower *= prefix;
 
             Variance = 0;
-            for (int i = 0; i <= endingPoint; i++)
+            i = 0;
+            while (i < Points.Count)
             {
                 double value = Points[i].Item2.Real - AverageValue;
                 Variance += value * value;
+                i++;
             }
             Variance *= prefix;
 
             EffectiveValue = Math.Sqrt(AveragePower);
+        }
+
+        public virtual Complex GenerateSignal(double t)
+        {
+            throw new NotImplementedException();
         }
     }
 }

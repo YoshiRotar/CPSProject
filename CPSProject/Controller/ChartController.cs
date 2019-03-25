@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace CPSProject.Controller
 {
-    public class ChartController
+    public class ChartController : INotifyPropertyChanged
     {
         private ICommand drawCommand1;
         private ICommand drawCommand2;
@@ -26,12 +26,12 @@ namespace CPSProject.Controller
         private LineSeries imaginarySeries1;
         private LineSeries realSeries2;
         private LineSeries imaginarySeries2;
+        private SignalTextProperties textProperties1;
+        private SignalTextProperties textProperties2;
         public event PropertyChangedEventHandler PropertyChanged;
         
         public int FirstChartID { get; set; }
         public int SecondChartID { get; set; }
-        public SignalTextProperties TextProperties1 { get; set; }
-        public SignalTextProperties TextProperties2 { get; set; }
 
         public ICommand DrawCommand1
         {
@@ -40,7 +40,7 @@ namespace CPSProject.Controller
                 if(drawCommand1 == null)
                 {
                     drawCommand1 = new RelayCommand(
-                        param => Draw(firstSignal.Signal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue),
+                        param => Draw(firstSignal.Signal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1),
                         param => firstSignal.CanDraw(FirstChartID,TextProperties1));
                 }
                 return drawCommand1;
@@ -54,7 +54,7 @@ namespace CPSProject.Controller
                 if (drawCommand2 == null)
                 {
                     drawCommand2 = new RelayCommand(
-                        param => Draw(secondSignal.Signal, ref realSeries2, ref imaginarySeries2, OxyColors.Red),
+                        param => Draw(secondSignal.Signal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2),
                         param => secondSignal.CanDraw(SecondChartID, TextProperties2));
                 }
                 return drawCommand2;
@@ -87,6 +87,31 @@ namespace CPSProject.Controller
             }
         }
 
+        public SignalTextProperties TextProperties1
+        {
+            get
+            {
+                return textProperties1;
+            }
+            set
+            {
+                textProperties1 = value;
+                OnPropertyChanged("TextProperties1");
+            }
+        }
+        public SignalTextProperties TextProperties2
+        {
+            get
+            {
+                return textProperties2;
+            }
+            set
+            {
+                textProperties2 = value;
+                OnPropertyChanged("TextProperties2");
+            }
+        }
+
         public ChartController()
         {
             FirstChartID = -1;
@@ -110,7 +135,7 @@ namespace CPSProject.Controller
             ImaginaryPlotModel.Series.Add(imaginarySeries2);
         }
 
-        private void Draw(ISignal signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color)
+        private void Draw(ISignal signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
         {
             bool b1 = RealPlotModel.Series.Remove(realSeries);
             bool b2 = ImaginaryPlotModel.Series.Remove(imaginarySeries);
@@ -143,6 +168,15 @@ namespace CPSProject.Controller
             ImaginaryPlotModel.Series.Add(imaginarySeries);
             RealPlotModel.InvalidatePlot(true);
             ImaginaryPlotModel.InvalidatePlot(true);
+
+            textTraits.AverageValueText = signal.AverageValue.ToString("N3");
+            textTraits.AbsouluteAverageValueText = signal.AbsouluteAverageValue.ToString("N3");
+            textTraits.AveragePowerText = signal.AveragePower.ToString("N3");
+            textTraits.VarianceText = signal.Variance.ToString("N3");
+            textTraits.EffectiveValueText = signal.EffectiveValue.ToString("N3");
+
+            OnPropertyChanged("TextProperties1");
+            OnPropertyChanged("TextProperties2");
         }
 
 

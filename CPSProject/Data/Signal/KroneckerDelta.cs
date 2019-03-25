@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class KroneckerDelta : ISignal
+    public class KroneckerDelta : SignalWithDiscreetValues
     {
-        public bool IsLinear { get; set; } = false;
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
-        public double StartingMoment { get; set; }
         public int NumberOfAllSamples { get; set; }
         public int NumberOfSample { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
 
         public KroneckerDelta(double f, double A, double t1, int l, int ns)
         {
@@ -33,9 +30,12 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(Moment, GenerateSignal(i)));
                 Moment += (1 / Frequency);
             }
+
+            EndingMoment = StartingMoment + (1 / Frequency) * (NumberOfAllSamples - 1);
+            CalculateTraits();
         }
 
-        public Complex GenerateSignal(double t)
+        public override Complex GenerateSignal(double t)
         {
             if (t == NumberOfSample) return new Complex { Real = Amplitude, Imaginary = 0 };
             else return new Complex { Real = 0, Imaginary = 0 };

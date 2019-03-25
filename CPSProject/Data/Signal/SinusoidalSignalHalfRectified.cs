@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class SinusoidalSignalHalfRectified : ISignal
+    public class SinusoidalSignalHalfRectified : SignalWithContinousValues
     {
-        public bool IsLinear { get; set; } = true;
-        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Period { get; set; }
-        public double StartingMoment { get; set; }
         public double Duration { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
 
         public SinusoidalSignalHalfRectified(double f, double A, double T, double t1, double d)
         {
@@ -30,9 +26,23 @@ namespace CPSProject.Data.Signal
             {
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
+
+            if (Duration >= Period)
+            {
+                EndingMoment = StartingMoment + Duration - (Duration % Period);
+                CalculateTraits();
+            }
+            else
+            {
+                AverageValue = 0;
+                AbsouluteAverageValue = 0;
+                AveragePower = 0;
+                Variance = 0;
+                EffectiveValue = 0;
+            }
         }
 
-        public Complex GenerateSignal(double t)
+        public override Complex GenerateSignal(double t)
         {
             Complex result;
 
