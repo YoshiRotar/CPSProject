@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class GaussianNoise : SignalWithContinousValues
+    public class GaussianNoise : SignalImplementation
     {
         Normal gaussianRandom = new Normal();
 
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Duration { get; set; }
 

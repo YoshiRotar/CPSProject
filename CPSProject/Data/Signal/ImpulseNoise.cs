@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class ImpulseNoise : SignalWithDiscreetValues
+    public class ImpulseNoise : SignalImplementation
     {
         Random random = new Random();
 

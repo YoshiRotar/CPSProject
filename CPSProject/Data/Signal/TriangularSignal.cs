@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class TriangularSignal : SignalWithContinousValues
+    public class TriangularSignal : SignalImplementation
     {
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Period { get; set; }
         public double Duration { get; set; }
@@ -31,7 +32,8 @@ namespace CPSProject.Data.Signal
 
             if (Duration >= Period)
             {
-                EndingMoment = StartingMoment + Duration - (Duration % Period);
+                int numberOfPeriods = (int)(Duration / Period);
+                EndingMoment = numberOfPeriods * Period + StartingMoment - 0.00001;
                 CalculateTraits();
             }
             else

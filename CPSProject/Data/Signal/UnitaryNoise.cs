@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class UnitaryNoise : SignalWithContinousValues
+    public class UnitaryNoise : SignalImplementation
     {
         Random random = new Random();
 
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Duration { get; set; }
 
         public UnitaryNoise(double f, double A, double t1, double d)
         {
-            IsLinear = true;
-
             Frequency = f;
             Amplitude = A;
             StartingMoment = t1;

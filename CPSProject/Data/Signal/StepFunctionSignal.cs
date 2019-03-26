@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class StepFunctionSignal : SignalWithContinousValues
+    public class StepFunctionSignal : SignalImplementation
     {
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Duration { get; set; }
         public double TimeOfStep { get; set; }
 
         public StepFunctionSignal(double f, double A, double t1, double d, double ts)
         {
-            IsLinear = true;
             Frequency = f;
             Amplitude = A;
             StartingMoment = t1;
