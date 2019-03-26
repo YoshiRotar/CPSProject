@@ -534,5 +534,9 @@
             <Label Content="Ilość przedziałów histogramu:" HorizontalAlignment="Left" Margin="-105,0,0,0" Width="248"/>
             <TextBox Text="{Binding Path=NumberOfIntervals}" Margin="70,5,5,5"></TextBox>
         </Grid>
+        <Button Content="Dodaj" Command="{Binding Path=AddCommand}" HorizontalAlignment="Left" Margin="982,36,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Odejmij" Command="{Binding Path=SubtractCommand}" HorizontalAlignment="Left" Margin="982,61,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Wymnóż" Command="{Binding Path=MultiplyCommand}" HorizontalAlignment="Left" Margin="982,86,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Podziel" Command="{Binding Path=DivideCommand}" HorizontalAlignment="Left" Margin="982,111,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

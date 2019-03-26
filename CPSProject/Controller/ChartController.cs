@@ -1,4 +1,5 @@
 ﻿using CPSProject.Data;
+using CPSProject.Data.Signal;
 using CPSProject.Data.Signal.Base;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -17,6 +18,10 @@ namespace CPSProject.Controller
     {
         private ICommand drawCommand1;
         private ICommand drawCommand2;
+        private ICommand addCommand;
+        private ICommand subtractCommand;
+        private ICommand multiplyCommand;
+        private ICommand divideCommand;
         private SignalRepresentation firstSignal;
         private SignalRepresentation secondSignal;
         private PlotModel realPlotModel;
@@ -42,7 +47,7 @@ namespace CPSProject.Controller
                 if(drawCommand1 == null)
                 {
                     drawCommand1 = new RelayCommand(
-                        param => Draw(firstSignal.Signal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1),
+                        param => Draw(FirstChartID, ref firstSignal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1),
                         param => firstSignal.CanDraw(FirstChartID,TextProperties1));
                 }
                 return drawCommand1;
@@ -56,7 +61,7 @@ namespace CPSProject.Controller
                 if (drawCommand2 == null)
                 {
                     drawCommand2 = new RelayCommand(
-                        param => Draw(secondSignal.Signal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2),
+                        param => Draw(SecondChartID, ref secondSignal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2),
                         param => secondSignal.CanDraw(SecondChartID, TextProperties2));
                 }
                 return drawCommand2;
@@ -127,6 +132,59 @@ namespace CPSProject.Controller
             }
         }
 
+        public ICommand AddCommand
+        {
+            get
+            {
+                if (addCommand == null)
+                {
+                    addCommand = new RelayCommand(
+                        param => AddSignals(),
+                        param => CanMakeOpperation());
+                }
+                return addCommand;
+            }
+        }
+        public ICommand SubtractCommand
+        {
+            get
+            {
+                if (subtractCommand == null)
+                {
+                    subtractCommand = new RelayCommand(
+                        param => SubtractSignals(),
+                        param => CanMakeOpperation());
+                }
+                return subtractCommand;
+            }
+        }
+        public ICommand MultiplyCommand
+        {
+            get
+            {
+                if (multiplyCommand == null)
+                {
+                    multiplyCommand = new RelayCommand(
+                        param => MultiplySignals(),
+                        param => CanMakeOpperation());
+                }
+                return multiplyCommand;
+            }
+        }
+        public ICommand DivideCommand
+        {
+            get
+            {
+                if (divideCommand == null)
+                {
+                    divideCommand = new RelayCommand(
+                        param => DivideSignals(),
+                        param => CanMakeOpperation());
+                }
+                return divideCommand;
+            }
+        }
+
         public ChartController()
         {
             FirstChartID = -1;
@@ -155,21 +213,33 @@ namespace CPSProject.Controller
             RealHistogramPlotModel.Series.Add(realHistogramSeries);
         }
 
-        private void Draw(ISignal signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
+        private void Draw(int id, ref SignalRepresentation signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
         {
+            if (id == 0) signal.Signal = new UnitaryNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
+            if (id == 1) signal.Signal = new GaussianNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
+            if (id == 2) signal.Signal = new SinusoidalSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
+            if (id == 3) signal.Signal = new SinusoidalSignalHalfRectified(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
+            if (id == 4) signal.Signal = new SinusoidalSignalFullRectified(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
+            if (id == 5) signal.Signal = new RectangularSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
+            if (id == 6) signal.Signal = new RectangularSimetricalSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
+            if (id == 7) signal.Signal = new TriangularSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
+            if (id == 8) signal.Signal = new StepFunctionSignal(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.timeOfStep);
+            if (id == 9) signal.Signal = new KroneckerDelta(signal.frequency, signal.amplitude, signal.startingMoment, signal.numberOfAllSamples, signal.numberOfSample);
+            if (id == 10) signal.Signal = new ImpulseNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.probability);
+
             bool b1 = RealPlotModel.Series.Remove(realSeries);
             bool b2 = ImaginaryPlotModel.Series.Remove(imaginarySeries);
 
             List<DataPoint> realUniversum = new List<DataPoint>();
             List<DataPoint> imaginaryUniversum = new List<DataPoint>();
-            foreach(Tuple<double, Complex> tuple in signal.Points)
+            foreach(Tuple<double, Complex> tuple in signal.Signal.Points)
             {
                 realUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
             
 
-            if (signal.IsLinear)
+            if (signal.Signal.IsLinear)
             {
                 realSeries = new LineSeries();
                 imaginarySeries = new LineSeries();
@@ -189,16 +259,16 @@ namespace CPSProject.Controller
             RealPlotModel.InvalidatePlot(true);
             ImaginaryPlotModel.InvalidatePlot(true);
 
-            textTraits.AverageValueText = signal.AverageValue.ToString("N3");
-            textTraits.AbsouluteAverageValueText = signal.AbsouluteAverageValue.ToString("N3");
-            textTraits.AveragePowerText = signal.AveragePower.ToString("N3");
-            textTraits.VarianceText = signal.Variance.ToString("N3");
-            textTraits.EffectiveValueText = signal.EffectiveValue.ToString("N3");
+            textTraits.AverageValueText = signal.Signal.AverageValue.ToString("N3");
+            textTraits.AbsouluteAverageValueText = signal.Signal.AbsouluteAverageValue.ToString("N3");
+            textTraits.AveragePowerText = signal.Signal.AveragePower.ToString("N3");
+            textTraits.VarianceText = signal.Signal.Variance.ToString("N3");
+            textTraits.EffectiveValueText = signal.Signal.EffectiveValue.ToString("N3");
 
             OnPropertyChanged("TextProperties1");
             OnPropertyChanged("TextProperties2");
 
-            List<int> realHisogramUniversum = signal.GenerateRealHistogram(NumberOfIntervals);
+            List<int> realHisogramUniversum = signal.Signal.GenerateRealHistogram(NumberOfIntervals);
             realHistogramSeries = new ColumnSeries();
             foreach (int elem in realHisogramUniversum)
             {
@@ -211,6 +281,30 @@ namespace CPSProject.Controller
             RealHistogramPlotModel.InvalidatePlot(true);
         }
 
+        private bool CanMakeOpperation()
+        {
+            if (firstSignal.Signal != null && secondSignal.Signal != null) return true;
+            return false;
+        }
+
+        private void AddSignals()
+        {
+
+        }
+
+        private void SubtractSignals()
+        {
+
+        }
+        private void MultiplySignals()
+        {
+
+        }
+
+        private void DivideSignals()
+        {
+
+        }
 
         protected void OnPropertyChanged(string name)
         {
