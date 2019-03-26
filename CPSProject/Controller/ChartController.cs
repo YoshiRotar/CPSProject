@@ -31,6 +31,8 @@ namespace CPSProject.Controller
         private LineSeries imaginarySeries1;
         private LineSeries realSeries2;
         private LineSeries imaginarySeries2;
+        private LineSeries realCombinedSeries;
+        private LineSeries imaginaryCombinedSeries;
         private ColumnSeries realHistogramSeries;
         private SignalTextProperties textProperties1;
         private SignalTextProperties textProperties2;
@@ -139,7 +141,7 @@ namespace CPSProject.Controller
                 if (addCommand == null)
                 {
                     addCommand = new RelayCommand(
-                        param => AddSignals(),
+                        param => CombineSignals(Complex.Add),
                         param => CanMakeOpperation());
                 }
                 return addCommand;
@@ -152,7 +154,7 @@ namespace CPSProject.Controller
                 if (subtractCommand == null)
                 {
                     subtractCommand = new RelayCommand(
-                        param => SubtractSignals(),
+                        param => CombineSignals(Complex.Subtract),
                         param => CanMakeOpperation());
                 }
                 return subtractCommand;
@@ -165,7 +167,7 @@ namespace CPSProject.Controller
                 if (multiplyCommand == null)
                 {
                     multiplyCommand = new RelayCommand(
-                        param => MultiplySignals(),
+                        param => CombineSignals(Complex.Multiply),
                         param => CanMakeOpperation());
                 }
                 return multiplyCommand;
@@ -178,7 +180,7 @@ namespace CPSProject.Controller
                 if (divideCommand == null)
                 {
                     divideCommand = new RelayCommand(
-                        param => DivideSignals(),
+                        param => CombineSignals(Complex.Divide),
                         param => CanMakeOpperation());
                 }
                 return divideCommand;
@@ -287,23 +289,69 @@ namespace CPSProject.Controller
             return false;
         }
 
-        private void AddSignals()
+        private void CombineSignals(Func<Complex, Complex, Complex> func)
         {
+            bool linearity = firstSignal.Signal.IsLinear & secondSignal.Signal.IsLinear;
+            List<Tuple<double, Complex>> signal1 = firstSignal.Signal.Points;
+            List<Tuple<double, Complex>> signal2 = secondSignal.Signal.Points;
+            List<Tuple<double, Complex>> outputSignal = new List<Tuple<double, Complex>>();
 
-        }
+            int i = 0;
+            int j = 0;
+            Complex result;
 
-        private void SubtractSignals()
-        {
+            while (i < signal1.Count && j < signal2.Count)
+            {
+                if (signal1[i].Item1 == signal2[j].Item1)
+                {
+                    result = func(signal1[i].Item2, signal2[j].Item2);
+                    outputSignal.Add(new Tuple<double, Complex>(signal1[i].Item1, result));
+                    i++;
+                    j++;
+                }
+                else if (signal1[i].Item1 < signal2[j].Item1)
+                {
+                    result = func(signal1[i].Item2, new Complex { Real = 0, Imaginary = 0 });
+                    outputSignal.Add(new Tuple<double, Complex>(signal1[j].Item1, result));
+                    i++;
+                }
+                else if (signal1[i].Item1 > signal2[j].Item1)
+                {
+                    result = func(signal2[j].Item2, new Complex { Real = 0, Imaginary = 0 });
+                    outputSignal.Add(new Tuple<double, Complex>(signal2[j].Item1, result));
+                    j++;
+                }
 
-        }
-        private void MultiplySignals()
-        {
+            }
 
-        }
+            if(linearity)
+            {
+                realCombinedSeries = new LineSeries();
+                imaginaryCombinedSeries = new LineSeries();
+            }
+            else
+            {
+                realCombinedSeries = new StemSeries();
+                imaginaryCombinedSeries = new StemSeries();
+            }
 
-        private void DivideSignals()
-        {
+            foreach (Tuple<double, Complex> tuple in outputSignal)
+            {
+                realCombinedSeries.Points.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
+            }
 
+            realCombinedSeries.Color = OxyColors.Purple;
+            imaginaryCombinedSeries.Color = OxyColors.Purple;
+
+            realPlotModel.Series.Clear();
+            imaginaryPlotModel.Series.Clear();
+
+            realPlotModel.Series.Add(realCombinedSeries);
+            imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
+
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
         }
 
         protected void OnPropertyChanged(string name)
