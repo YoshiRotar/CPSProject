@@ -31,7 +31,7 @@ namespace CPSProject.Data.Signal
                 Moment += (1 / Frequency);
             }
 
-            EndingMoment = StartingMoment + (1 / Frequency) * (NumberOfAllSamples - 1);
+            numberOfConsideredPoints = Points.Count;
             CalculateTraits();
         }
 

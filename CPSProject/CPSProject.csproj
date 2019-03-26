@@ -91,7 +91,6 @@
     <Compile Include="Data\Signal\SinusoidalSignalFullRectified.cs" />
     <Compile Include="Data\Signal\SinusoidalSignalHalfRectified.cs" />
     <Compile Include="Data\Signal\StepFunctionSignal.cs" />
-    <Compile Include="Data\Signal\Base\SignalWithContinousValues.cs" />
     <Compile Include="Data\Signal\TriangularSignal.cs" />
     <Compile Include="Data\Signal\UnitaryNoise.cs" />
     <Compile Include="MainWindow.xaml.cs">

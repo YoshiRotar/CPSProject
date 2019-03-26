@@ -30,7 +30,7 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
 
-            EndingMoment = StartingMoment + Duration;
+            numberOfConsideredPoints = Points.Count;
             CalculateTraits();
         }
 

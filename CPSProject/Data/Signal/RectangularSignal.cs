@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class RectangularSignal : SignalWithContinousValues
+    public class RectangularSignal : SignalWithDiscreetValues
     {
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Period { get; set; }
         public double Duration { get; set; }
@@ -31,7 +32,12 @@ namespace CPSProject.Data.Signal
 
             if (Duration >= Period)
             {
-                EndingMoment = StartingMoment + Duration - (Duration % Period);
+                int numberOfPeriods = (int)(Duration / Period);
+                double lastValueOfPeriod = numberOfPeriods * Period + StartingMoment;
+                foreach(Tuple<double, Complex> elem in Points)
+                {
+                    if (elem.Item1 <= lastValueOfPeriod) numberOfConsideredPoints = Points.IndexOf(elem);
+                }
                 CalculateTraits();
             }
             else

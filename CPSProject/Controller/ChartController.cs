@@ -30,7 +30,6 @@ namespace CPSProject.Controller
         private ICommand divideCommand;
         private SignalRepresentation firstSignal;
         private SignalRepresentation secondSignal;
-        private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
         private PlotModel realHistogramPlotModel;

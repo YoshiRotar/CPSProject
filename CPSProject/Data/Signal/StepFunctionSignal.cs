@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class StepFunctionSignal : SignalWithContinousValues
+    public class StepFunctionSignal : SignalWithDiscreetValues
     {
+        public double Frequency { get; set; }
         public double Amplitude { get; set; }
         public double Duration { get; set; }
         public double TimeOfStep { get; set; }
@@ -29,7 +30,6 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
 
-            EndingMoment = StartingMoment + Duration;
             CalculateTraits();
         }
 

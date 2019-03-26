@@ -9,16 +9,16 @@ namespace CPSProject.Data.Signal.Base
     public class SignalWithDiscreetValues : SignalImplementation
     {
         public double StartingMoment { get; set; }
-        public double EndingMoment { get; set; }
-        public override bool IsLinear { get; set; } = false;
+        protected int numberOfConsideredPoints; 
 
         public void CalculateTraits()
         {
             int i = 0;
             double prefix = 1.0 / Points.Count;
 
+
             AverageValue = 0;
-            while (i < Points.Count)
+            while (i < numberOfConsideredPoints)
             {
                 AverageValue += Points[i].Item2.Real;
                 i++;
@@ -29,7 +29,7 @@ namespace CPSProject.Data.Signal.Base
 
             AveragePower = 0;
             i = 0;
-            while (i < Points.Count)
+            while (i < numberOfConsideredPoints)
             {
                 AveragePower += Points[i].Item2.Real * Points[i].Item2.Real;
                 i++;
@@ -38,7 +38,7 @@ namespace CPSProject.Data.Signal.Base
 
             Variance = 0;
             i = 0;
-            while (i < Points.Count)
+            while (i < numberOfConsideredPoints)
             {
                 double value = Points[i].Item2.Real - AverageValue;
                 Variance += value * value;
