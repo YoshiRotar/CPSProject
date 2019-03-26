@@ -31,6 +31,7 @@ namespace CPSProject.Controller
         private ICommand clearCommand;
         private SignalRepresentation firstSignal;
         private SignalRepresentation secondSignal;
+        private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
         private PlotModel realHistogramPlotModel;
@@ -339,7 +340,7 @@ namespace CPSProject.Controller
             firstSignal = new SignalRepresentation();
             secondSignal = new SignalRepresentation();
             combinedSignal = new SignalRepresentation();
-            combinedSignal.Signal = new SignalWithDiscreetValues();
+            combinedSignal.Signal = new SignalImplementation();
             combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();
             TextProperties1 = new SignalTextProperties();
             TextProperties2 = new SignalTextProperties();
@@ -376,6 +377,8 @@ namespace CPSProject.Controller
             if (id == 8) signal.Signal = new StepFunctionSignal(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.timeOfStep);
             if (id == 9) signal.Signal = new KroneckerDelta(signal.frequency, signal.amplitude, signal.startingMoment, signal.numberOfAllSamples, signal.numberOfSample);
             if (id == 10) signal.Signal = new ImpulseNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.probability);
+
+            if (signal.Signal == null) return;
 
             combinedSignal.Signal.Points.RemoveRange(0, combinedSignal.Signal.Points.Count);
 
