@@ -26,7 +26,7 @@ namespace CPSProject.Controller
         private SignalRepresentation secondSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
-        private PlotModel realHisogramPlotModel;
+        private PlotModel realHistogramPlotModel;
         private ScatterSeries realSeries1;
         private ScatterSeries imaginarySeries1;
         private ScatterSeries realSeries2;
@@ -100,11 +100,11 @@ namespace CPSProject.Controller
         {
             get
             {
-                return realHisogramPlotModel;
+                return realHistogramPlotModel;
             }
             set
             {
-                realHisogramPlotModel = value;
+                realHistogramPlotModel = value;
                 OnPropertyChanged("RealHistogramPlotModel");
             }
         }
@@ -202,17 +202,19 @@ namespace CPSProject.Controller
             realSeries2 = new ScatterSeries();
             imaginarySeries1 = new ScatterSeries();
             imaginarySeries2 = new ScatterSeries();
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
             realHistogramSeries = new ColumnSeries();
 
             realPlotModel = new PlotModel();
             imaginaryPlotModel = new PlotModel();
-            RealHistogramPlotModel = new PlotModel();
+            realHistogramPlotModel = new PlotModel();
 
             RealPlotModel.Series.Add(realSeries1);
             RealPlotModel.Series.Add(realSeries2);
             ImaginaryPlotModel.Series.Add(imaginarySeries1);
             ImaginaryPlotModel.Series.Add(imaginarySeries2);
-            RealHistogramPlotModel.Series.Add(realHistogramSeries);
+            realHistogramPlotModel.Series.Add(realHistogramSeries);
         }
 
         private void Draw(int id, ref SignalRepresentation signal, ref ScatterSeries realSeries, ref ScatterSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
@@ -229,8 +231,10 @@ namespace CPSProject.Controller
             if (id == 9) signal.Signal = new KroneckerDelta(signal.frequency, signal.amplitude, signal.startingMoment, signal.numberOfAllSamples, signal.numberOfSample);
             if (id == 10) signal.Signal = new ImpulseNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.probability);
 
-            bool b1 = RealPlotModel.Series.Remove(realSeries);
-            bool b2 = ImaginaryPlotModel.Series.Remove(imaginarySeries);
+            RealPlotModel.Series.Remove(realSeries);
+            ImaginaryPlotModel.Series.Remove(imaginarySeries);
+            RealPlotModel.Series.Remove(realCombinedSeries);
+            ImaginaryPlotModel.Series.Remove(imaginaryCombinedSeries);
 
             realPlotModel.Axes.Clear();
             imaginaryPlotModel.Axes.Clear();
@@ -276,11 +280,11 @@ namespace CPSProject.Controller
             {
                 realHistogramSeries.Items.Add(new ColumnItem(elem));
             }
-            RealHistogramPlotModel.Axes.Clear();
-            RealHistogramPlotModel.Series.Clear();
+            realHistogramPlotModel.Axes.Clear();
+            realHistogramPlotModel.Series.Clear();
             realHistogramSeries.FillColor = color;
-            RealHistogramPlotModel.Series.Add(realHistogramSeries);
-            RealHistogramPlotModel.InvalidatePlot(true);
+            realHistogramPlotModel.Series.Add(realHistogramSeries);
+            realHistogramPlotModel.InvalidatePlot(true);
         }
 
         private bool CanMakeOpperation()
@@ -347,6 +351,9 @@ namespace CPSProject.Controller
 
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
+
+            firstSignal.Signal = null;
+            secondSignal.Signal = null;
         }
 
         protected void OnPropertyChanged(string name)
