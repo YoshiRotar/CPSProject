@@ -27,12 +27,12 @@ namespace CPSProject.Controller
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
         private PlotModel realHisogramPlotModel;
-        private LineSeries realSeries1;
-        private LineSeries imaginarySeries1;
-        private LineSeries realSeries2;
-        private LineSeries imaginarySeries2;
-        private LineSeries realCombinedSeries;
-        private LineSeries imaginaryCombinedSeries;
+        private ScatterSeries realSeries1;
+        private ScatterSeries imaginarySeries1;
+        private ScatterSeries realSeries2;
+        private ScatterSeries imaginarySeries2;
+        private ScatterSeries realCombinedSeries;
+        private ScatterSeries imaginaryCombinedSeries;
         private ColumnSeries realHistogramSeries;
         private SignalTextProperties textProperties1;
         private SignalTextProperties textProperties2;
@@ -198,10 +198,10 @@ namespace CPSProject.Controller
             TextProperties1 = new SignalTextProperties();
             TextProperties2 = new SignalTextProperties();
 
-            realSeries1 = new LineSeries();
-            realSeries2 = new LineSeries();
-            imaginarySeries1 = new LineSeries();
-            imaginarySeries2 = new LineSeries();
+            realSeries1 = new ScatterSeries();
+            realSeries2 = new ScatterSeries();
+            imaginarySeries1 = new ScatterSeries();
+            imaginarySeries2 = new ScatterSeries();
             realHistogramSeries = new ColumnSeries();
 
             realPlotModel = new PlotModel();
@@ -215,7 +215,7 @@ namespace CPSProject.Controller
             RealHistogramPlotModel.Series.Add(realHistogramSeries);
         }
 
-        private void Draw(int id, ref SignalRepresentation signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
+        private void Draw(int id, ref SignalRepresentation signal, ref ScatterSeries realSeries, ref ScatterSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
         {
             if (id == 0) signal.Signal = new UnitaryNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
             if (id == 1) signal.Signal = new GaussianNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
@@ -232,28 +232,28 @@ namespace CPSProject.Controller
             bool b1 = RealPlotModel.Series.Remove(realSeries);
             bool b2 = ImaginaryPlotModel.Series.Remove(imaginarySeries);
 
-            List<DataPoint> realUniversum = new List<DataPoint>();
-            List<DataPoint> imaginaryUniversum = new List<DataPoint>();
+            realPlotModel.Axes.Clear();
+            imaginaryPlotModel.Axes.Clear();
+
+            List<ScatterPoint> realUniversum = new List<ScatterPoint>();
+            List<ScatterPoint> imaginaryUniversum = new List<ScatterPoint>();
             foreach(Tuple<double, Complex> tuple in signal.Signal.Points)
             {
-                realUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
-                imaginaryUniversum.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
+                realUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
             
 
-            if (signal.Signal.IsLinear)
-            {
-                realSeries = new LineSeries();
-                imaginarySeries = new LineSeries();
-            }
-            else
-            {
-                realSeries = new StemSeries();
-                imaginarySeries = new StemSeries();
-            }
+            realSeries = new ScatterSeries();
+            imaginarySeries = new ScatterSeries();
 
-            realSeries.Color = color;
-            imaginarySeries.Color = color;
+            realSeries.MarkerType = MarkerType.Circle;
+            imaginarySeries.MarkerType = MarkerType.Circle;
+            realSeries.MarkerFill = color;
+            imaginarySeries.MarkerFill = color;
+            realSeries.MarkerSize = 1;
+            imaginarySeries.MarkerSize = 1;
+
             realSeries.Points.AddRange(realUniversum);
             imaginarySeries.Points.AddRange(imaginaryUniversum);
             RealPlotModel.Series.Add(realSeries);
@@ -302,47 +302,42 @@ namespace CPSProject.Controller
 
             while (i < signal1.Count && j < signal2.Count)
             {
-                if (signal1[i].Item1 == signal2[j].Item1)
+                if (Math.Abs(signal1[i].Item1 - signal2[j].Item1) < 0.001)
                 {
                     result = func(signal1[i].Item2, signal2[j].Item2);
                     outputSignal.Add(new Tuple<double, Complex>(signal1[i].Item1, result));
                     i++;
                     j++;
                 }
-                else if (signal1[i].Item1 < signal2[j].Item1)
+                else if (signal1[i].Item1 - signal2[j].Item1 > 0.001 )
                 {
-                    result = func(signal1[i].Item2, new Complex { Real = 0, Imaginary = 0 });
-                    outputSignal.Add(new Tuple<double, Complex>(signal1[j].Item1, result));
                     i++;
                 }
-                else if (signal1[i].Item1 > signal2[j].Item1)
+                else if (signal2[j].Item1 - signal1[i].Item1 > 0.001)
                 {
-                    result = func(signal2[j].Item2, new Complex { Real = 0, Imaginary = 0 });
-                    outputSignal.Add(new Tuple<double, Complex>(signal2[j].Item1, result));
                     j++;
                 }
 
             }
 
-            if(linearity)
-            {
-                realCombinedSeries = new LineSeries();
-                imaginaryCombinedSeries = new LineSeries();
-            }
-            else
-            {
-                realCombinedSeries = new StemSeries();
-                imaginaryCombinedSeries = new StemSeries();
-            }
+            realPlotModel.Axes.Clear();
+            imaginaryPlotModel.Axes.Clear();
+
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
+
+            realCombinedSeries.MarkerType = MarkerType.Circle;
+            imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
+            realCombinedSeries.MarkerFill = OxyColors.Purple;
+            imaginaryCombinedSeries.MarkerFill = OxyColors.Purple;
+            realCombinedSeries.MarkerSize = 1;
+            imaginaryCombinedSeries.MarkerSize = 1;
 
             foreach (Tuple<double, Complex> tuple in outputSignal)
             {
-                realCombinedSeries.Points.Add(new DataPoint(tuple.Item1, tuple.Item2.Real));
-                imaginaryCombinedSeries.Points.Add(new DataPoint(tuple.Item1, tuple.Item2.Imaginary));
+                realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
-
-            realCombinedSeries.Color = OxyColors.Purple;
-            imaginaryCombinedSeries.Color = OxyColors.Purple;
 
             realPlotModel.Series.Clear();
             imaginaryPlotModel.Series.Clear();

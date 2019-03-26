@@ -37,7 +37,12 @@ namespace CPSProject.Data
 
         public static Complex Divide(Complex a, Complex b)
         {
-            throw new NotImplementedException();
+            Complex result = new Complex();
+            result = Multiply(a, b);
+            double divisor = b.Real * b.Real + b.Imaginary * b.Imaginary;
+            result.Real /= divisor;
+            result.Imaginary /= divisor;
+            return result;
         }
     }
 }
