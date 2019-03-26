@@ -264,6 +264,11 @@
                 </Style>
             </Button.Style>
         </Button>
+      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand1}" HorizontalAlignment="Left" Margin="46,280,0,0" VerticalAlignment="Top" Width="127"/>
+      <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand1}" HorizontalAlignment="Left" Margin="183,280,0,0" VerticalAlignment="Top" Width="127"/>
+      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand2}" HorizontalAlignment="Left" Margin="480,280,0,0" VerticalAlignment="Top" Width="127"/>
+      <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand2}" HorizontalAlignment="Left" Margin="617,280,0,0" VerticalAlignment="Top" Width="127"/>
+      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand3}" HorizontalAlignment="Left" Margin="982,280,0,0" VerticalAlignment="Top" Width="127"/>
         <StackPanel HorizontalAlignment="Left" Height="255" Margin="480,71,0,0" VerticalAlignment="Top" Width="96">
             <Grid Margin="0,2,0,2">
                 <Grid.Style>

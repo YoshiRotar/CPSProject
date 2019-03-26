@@ -7,6 +7,7 @@ using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,12 +19,18 @@ namespace CPSProject.Controller
     {
         private ICommand drawCommand1;
         private ICommand drawCommand2;
+        private ICommand saveCommand1;
+        private ICommand loadCommand1;
+        private ICommand saveCommand2;
+        private ICommand loadCommand2;
+        private ICommand saveCommand3;
         private ICommand addCommand;
         private ICommand subtractCommand;
         private ICommand multiplyCommand;
         private ICommand divideCommand;
         private SignalRepresentation firstSignal;
         private SignalRepresentation secondSignal;
+        private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
         private PlotModel realHistogramPlotModel;
@@ -67,6 +74,119 @@ namespace CPSProject.Controller
                         param => secondSignal.CanDraw(SecondChartID, TextProperties2));
                 }
                 return drawCommand2;
+            }
+        }
+
+        public ICommand SaveCommand1
+        {
+            get
+            {
+                if (saveCommand1 == null)
+                {
+                    saveCommand1 = new RelayCommand(
+                        param => SavePlot(firstSignal.Signal),
+                        param => CanSavePlot(firstSignal.Signal));
+                }
+                return saveCommand1;
+            }
+        }
+
+        public ICommand SaveCommand2
+        {
+            get
+            {
+                if (saveCommand2 == null)
+                {
+                    saveCommand2 = new RelayCommand(
+                        param => SavePlot(secondSignal.Signal),
+                        param => CanSavePlot(secondSignal.Signal));
+                }
+                return saveCommand2;
+            }
+        }
+
+        public ICommand SaveCommand3
+        {
+            get
+            {
+                if (saveCommand3 == null)
+                {
+                    saveCommand3 = new RelayCommand(
+                        param => SavePlot(secondSignal.Signal),
+                        param => CanSavePlot(secondSignal.Signal));
+                }
+                return saveCommand3;
+            }
+        }
+
+        public ICommand LoadCommand1
+        {
+            get
+            {
+                if (loadCommand1 == null)
+                {
+                    loadCommand1 = new RelayCommand(
+                        param => { LoadPlot(firstSignal); Draw(-1, ref firstSignal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1); },
+                        param => true);
+                }
+                return loadCommand1;
+            }
+        }
+
+        public ICommand LoadCommand2
+        {
+            get
+            {
+                if (loadCommand2 == null)
+                {
+                    loadCommand2 = new RelayCommand(
+                        param => { LoadPlot(secondSignal); Draw(-1, ref secondSignal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2); },
+                        param => true);
+                }
+                return loadCommand2;
+            }
+        }
+
+        private void SavePlot(ISignal signal)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.DefaultExt = "xD";
+            dlg.AddExtension = true;
+            if (dlg.ShowDialog() == false) return;
+            using (BinaryWriter writer = new BinaryWriter(File.Open(dlg.FileName, FileMode.Create)))
+            {
+                foreach (Tuple<double, Complex> point in signal.Points)
+                {
+                    writer.Write(point.Item1);
+                    writer.Write(point.Item2.Real);
+                    writer.Write(point.Item2.Imaginary);
+                }
+            }
+        }
+
+        private bool CanSavePlot(ISignal signal)
+        {
+            if (signal == null) return false;
+            return (signal.Points.Count != 0);
+        }
+
+        private void LoadPlot(SignalRepresentation signalRepresentation)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "*All Files | *.xD";
+            if (dlg.ShowDialog() == false) return;
+            using (BinaryReader reader = new BinaryReader(File.Open(dlg.FileName, FileMode.Open)))
+            {
+                signalRepresentation.Signal = new SignalWithDiscreetValues();
+                signalRepresentation.Signal.Points = new List<Tuple<double, Complex>>();
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {
+                    double xCoordinate = reader.ReadDouble();
+                    Complex value = new Complex();
+                    value.Real = reader.ReadDouble();
+                    value.Imaginary = reader.ReadDouble();
+                    signalRepresentation.Signal.Points.Add(new Tuple<double, Complex>(xCoordinate, value));
+                }
             }
         }
 
