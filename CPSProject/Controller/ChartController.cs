@@ -112,8 +112,8 @@ namespace CPSProject.Controller
                 if (saveCommand3 == null)
                 {
                     saveCommand3 = new RelayCommand(
-                        param => SavePlot(secondSignal.Signal),
-                        param => CanSavePlot(secondSignal.Signal));
+                        param => SavePlot(combinedSignal.Signal),
+                        param => CanSavePlot(combinedSignal.Signal));
                 }
                 return saveCommand3;
             }
@@ -315,6 +315,9 @@ namespace CPSProject.Controller
 
             firstSignal = new SignalRepresentation();
             secondSignal = new SignalRepresentation();
+            combinedSignal = new SignalRepresentation();
+            combinedSignal.Signal = new SignalWithDiscreetValues();
+            combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();
             TextProperties1 = new SignalTextProperties();
             TextProperties2 = new SignalTextProperties();
 
@@ -350,6 +353,8 @@ namespace CPSProject.Controller
             if (id == 8) signal.Signal = new StepFunctionSignal(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.timeOfStep);
             if (id == 9) signal.Signal = new KroneckerDelta(signal.frequency, signal.amplitude, signal.startingMoment, signal.numberOfAllSamples, signal.numberOfSample);
             if (id == 10) signal.Signal = new ImpulseNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.probability);
+
+            combinedSignal.Signal.Points.RemoveRange(0, combinedSignal.Signal.Points.Count);
 
             RealPlotModel.Series.Remove(realSeries);
             ImaginaryPlotModel.Series.Remove(imaginarySeries);
@@ -461,6 +466,7 @@ namespace CPSProject.Controller
             {
                 realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+                combinedSignal.Signal.Points.Add(tuple);
             }
 
             realPlotModel.Series.Clear();
