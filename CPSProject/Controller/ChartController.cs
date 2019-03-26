@@ -28,6 +28,7 @@ namespace CPSProject.Controller
         private ICommand subtractCommand;
         private ICommand multiplyCommand;
         private ICommand divideCommand;
+        private ICommand clearCommand;
         private SignalRepresentation firstSignal;
         private SignalRepresentation secondSignal;
         private SignalRepresentation combinedSignal;
@@ -147,6 +148,20 @@ namespace CPSProject.Controller
             }
         }
 
+        public ICommand ClearCommand
+        {
+            get
+            {
+                if (clearCommand == null)
+                {
+                    clearCommand = new RelayCommand(
+                        param => ClearPlot(),
+                        param => CanClear());
+                }
+                return clearCommand;
+            }
+        }
+
         private void SavePlot(ISignal signal)
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
@@ -168,6 +183,14 @@ namespace CPSProject.Controller
         {
             if (signal == null) return false;
             return (signal.Points.Count != 0);
+        }
+
+        private bool CanClear()
+        {
+            if (RealPlotModel.Axes.Count != 0) return true;
+            if (ImaginaryPlotModel.Axes.Count != 0) return true;
+            if (RealHistogramPlotModel.Axes.Count != 0) return true;
+            return false;
         }
 
         private void LoadPlot(SignalRepresentation signalRepresentation)
@@ -418,6 +441,16 @@ namespace CPSProject.Controller
             return false;
         }
 
+        private void ClearPlot()
+        {
+            realPlotModel.Series.Clear();
+            imaginaryPlotModel.Series.Clear();
+            RealHistogramPlotModel.Series.Clear();
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
+            RealHistogramPlotModel.InvalidatePlot(true);
+        }
+
         private void CombineSignals(Func<Complex, Complex, Complex> func)
         {
             bool linearity = firstSignal.Signal.IsLinear & secondSignal.Signal.IsLinear;
@@ -469,8 +502,7 @@ namespace CPSProject.Controller
                 combinedSignal.Signal.Points.Add(tuple);
             }
 
-            realPlotModel.Series.Clear();
-            imaginaryPlotModel.Series.Clear();
+            ClearPlot();
 
             realPlotModel.Series.Add(realCombinedSeries);
             imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
