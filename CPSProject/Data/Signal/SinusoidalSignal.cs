@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class SinusoidalSignal : SignalWithDiscreetValues
+    public class SinusoidalSignal : SignalImplementation
     {
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
@@ -30,6 +30,8 @@ namespace CPSProject.Data.Signal
 
             if (Duration >= Period)
             {
+                int numberOfPeriods = (int)(Duration / Period);
+                EndingMoment = numberOfPeriods * Period + StartingMoment - 0.00001;
                 CalculateTraits();
             }
             else

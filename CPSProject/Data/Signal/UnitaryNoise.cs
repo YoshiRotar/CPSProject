@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class UnitaryNoise : SignalWithDiscreetValues
+    public class UnitaryNoise : SignalImplementation
     {
         Random random = new Random();
 
@@ -18,8 +18,6 @@ namespace CPSProject.Data.Signal
 
         public UnitaryNoise(double f, double A, double t1, double d)
         {
-            IsLinear = true;
-
             Frequency = f;
             Amplitude = A;
             StartingMoment = t1;
@@ -31,6 +29,7 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
 
+            EndingMoment = StartingMoment + Duration;
             CalculateTraits();
         }
 

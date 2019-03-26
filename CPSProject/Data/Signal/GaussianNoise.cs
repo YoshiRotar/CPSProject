@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class GaussianNoise : SignalWithDiscreetValues
+    public class GaussianNoise : SignalImplementation
     {
         Normal gaussianRandom = new Normal();
 
@@ -31,7 +31,7 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
 
-            numberOfConsideredPoints = Points.Count;
+            EndingMoment = StartingMoment + Duration;
             CalculateTraits();
         }
 

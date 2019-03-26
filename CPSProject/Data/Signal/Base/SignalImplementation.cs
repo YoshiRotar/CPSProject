@@ -8,7 +8,10 @@ namespace CPSProject.Data.Signal.Base
 {
     public class SignalImplementation : ISignal
     {
-        public virtual bool IsLinear { get; set; }
+        private readonly Func<Tuple<double, Complex>, double> selector = d => d.Item2.Real;
+
+        public double StartingMoment { get; set; }
+        public double EndingMoment { get; set; }
         public double AverageValue { get; set; }
         public double AbsouluteAverageValue { get; set; }
         public double AveragePower { get; set; }
@@ -39,6 +42,42 @@ namespace CPSProject.Data.Signal.Base
             return result.ToList();
         }
 
-        Func<Tuple<double, Complex>, double> selector = d => d.Item2.Real;
+        public void CalculateTraits()
+        {
+            int i = 0;
+            double prefix = 1.0 / Points.Count;
+
+
+            AverageValue = 0;
+            while (i < Points.Count &&  Points[i].Item1 <= EndingMoment)
+            {
+                AverageValue += Points[i].Item2.Real;
+                i++;
+            }
+            AverageValue *= prefix;
+
+            AbsouluteAverageValue = Math.Abs(AverageValue);
+
+            AveragePower = 0;
+            i = 0;
+            while (i < Points.Count && Points[i].Item1 <= EndingMoment)
+            {
+                AveragePower += Points[i].Item2.Real * Points[i].Item2.Real;
+                i++;
+            }
+            AveragePower *= prefix;
+
+            Variance = 0;
+            i = 0;
+            while (i < Points.Count && Points[i].Item1 <= EndingMoment)
+            {
+                double value = Points[i].Item2.Real - AverageValue;
+                Variance += value * value;
+                i++;
+            }
+            Variance *= prefix;
+
+            EffectiveValue = Math.Sqrt(AveragePower);
+        }
     }
 }

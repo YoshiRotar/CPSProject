@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class StepFunctionSignal : SignalWithDiscreetValues
+    public class StepFunctionSignal : SignalImplementation
     {
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
@@ -17,7 +17,6 @@ namespace CPSProject.Data.Signal
 
         public StepFunctionSignal(double f, double A, double t1, double d, double ts)
         {
-            IsLinear = true;
             Frequency = f;
             Amplitude = A;
             StartingMoment = t1;
@@ -30,6 +29,7 @@ namespace CPSProject.Data.Signal
                 Points.Add(new Tuple<double, Complex>(i, GenerateSignal(i)));
             }
 
+            EndingMoment = StartingMoment + Duration;
             CalculateTraits();
         }
 

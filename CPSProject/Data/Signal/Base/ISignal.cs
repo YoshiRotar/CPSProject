@@ -8,7 +8,6 @@ namespace CPSProject.Data.Signal.Base
 {
     public interface ISignal
     {
-        bool IsLinear { get; set; }
         double AverageValue { get; set; }
         double AbsouluteAverageValue { get; set; }
         double AveragePower { get; set; }

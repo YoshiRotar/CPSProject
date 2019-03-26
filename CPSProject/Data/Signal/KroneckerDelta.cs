@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.Signal
 {
-    public class KroneckerDelta : SignalWithDiscreetValues
+    public class KroneckerDelta : SignalImplementation
     {
         public double Frequency { get; set; }
         public double Amplitude { get; set; }
@@ -31,7 +31,7 @@ namespace CPSProject.Data.Signal
                 Moment += (1 / Frequency);
             }
 
-            numberOfConsideredPoints = Points.Count;
+            EndingMoment = StartingMoment + NumberOfAllSamples / Frequency;
             CalculateTraits();
         }
 

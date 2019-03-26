@@ -40,8 +40,16 @@ namespace CPSProject.Data
             Complex result = new Complex();
             result = Multiply(a, b);
             double divisor = b.Real * b.Real + b.Imaginary * b.Imaginary;
-            result.Real /= divisor;
-            result.Imaginary /= divisor;
+            if(divisor >= 0.001 || divisor <= -0.001)
+            {
+                result.Real /= divisor;
+                result.Imaginary /= divisor;
+            }
+            else
+            {
+                result.Real = 0;
+                result.Imaginary = 0;
+            }
             return result;
         }
     }

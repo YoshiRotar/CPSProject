@@ -40,6 +40,7 @@ namespace CPSProject.Controller
         private ScatterSeries realCombinedSeries;
         private ScatterSeries imaginaryCombinedSeries;
         private ColumnSeries realHistogramSeries;
+        private ColumnSeries realCombinedHistogramSeries;
         private SignalTextProperties textProperties1;
         private SignalTextProperties textProperties2;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -176,7 +177,7 @@ namespace CPSProject.Controller
             if (dlg.ShowDialog() == false) return;
             using (BinaryReader reader = new BinaryReader(File.Open(dlg.FileName, FileMode.Open)))
             {
-                signalRepresentation.Signal = new SignalWithDiscreetValues();
+                signalRepresentation.Signal = new SignalImplementation();
                 signalRepresentation.Signal.Points = new List<Tuple<double, Complex>>();
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
@@ -414,7 +415,6 @@ namespace CPSProject.Controller
 
         private void CombineSignals(Func<Complex, Complex, Complex> func)
         {
-            bool linearity = firstSignal.Signal.IsLinear & secondSignal.Signal.IsLinear;
             List<Tuple<double, Complex>> signal1 = firstSignal.Signal.Points;
             List<Tuple<double, Complex>> signal2 = secondSignal.Signal.Points;
             List<Tuple<double, Complex>> outputSignal = new List<Tuple<double, Complex>>();
@@ -425,7 +425,7 @@ namespace CPSProject.Controller
 
             while (i < signal1.Count && j < signal2.Count)
             {
-                if (Math.Abs(signal1[i].Item1 - signal2[j].Item1) < 0.001)
+                if (Math.Abs(signal1[i].Item1 - signal2[j].Item1) <= 0.001)
                 {
                     result = func(signal1[i].Item2, signal2[j].Item2);
                     outputSignal.Add(new Tuple<double, Complex>(signal1[i].Item1, result));
@@ -434,11 +434,11 @@ namespace CPSProject.Controller
                 }
                 else if (signal1[i].Item1 - signal2[j].Item1 > 0.001 )
                 {
-                    i++;
+                    j++;
                 }
                 else if (signal2[j].Item1 - signal1[i].Item1 > 0.001)
                 {
-                    j++;
+                    i++;
                 }
 
             }
@@ -470,6 +470,32 @@ namespace CPSProject.Controller
 
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
+
+            double min = outputSignal.Min(d => d.Item2.Real);
+            double max = outputSignal.Max(d => d.Item2.Real);
+            double universumWidth = max - min;
+            double intervalWidth = universumWidth / NumberOfIntervals;
+
+            int[] histogramUniversum = new int[NumberOfIntervals];
+
+            for (int k = 0; k < outputSignal.Count; k++)
+            {
+                int interval = (int)Math.Floor((outputSignal[k].Item2.Real - min) / (intervalWidth + 0.0001));
+                histogramUniversum[interval]++;
+            }
+
+            List<int> realHisogramUniversum = histogramUniversum.ToList();
+            realCombinedHistogramSeries = new ColumnSeries();
+            foreach (int elem in realHisogramUniversum)
+            {
+                realCombinedHistogramSeries.Items.Add(new ColumnItem(elem));
+            }
+
+            realHistogramPlotModel.Axes.Clear();
+            realHistogramPlotModel.Series.Clear();
+            realCombinedHistogramSeries.FillColor = OxyColors.Purple;
+            realHistogramPlotModel.Series.Add(realCombinedHistogramSeries);
+            realHistogramPlotModel.InvalidatePlot(true);
 
             firstSignal.Signal = null;
             secondSignal.Signal = null;

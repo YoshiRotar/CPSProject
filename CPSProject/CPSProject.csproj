@@ -80,7 +80,6 @@
     <Compile Include="Controller\SignalRepresentation.cs" />
     <Compile Include="Data\Complex.cs" />
     <Compile Include="Data\Signal\Base\SignalImplementation.cs" />
-    <Compile Include="Data\Signal\Base\SignalWithDiscreetValues.cs" />
     <Compile Include="Data\Signal\ImpulseNoise.cs" />
     <Compile Include="Data\Signal\KroneckerDelta.cs" />
     <Compile Include="Data\Signal\GaussianNoise.cs" />
