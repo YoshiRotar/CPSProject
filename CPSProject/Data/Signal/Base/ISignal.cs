@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPSProject.Data.Signal.Bases
+namespace CPSProject.Data.Signal.Base
 {
     public interface ISignal
     {
@@ -16,5 +16,6 @@ namespace CPSProject.Data.Signal.Bases
         double EffectiveValue { get; set; }
         List<Tuple<double, Complex>> Points { get; set; }
         Complex GenerateSignal(double t);
+        List<int> GenerateRealHistogram(int numberOfIntervals);
     }
 }

@@ -1,4 +1,4 @@
-﻿using CPSProject.Data.Signal.Bases;
+﻿using CPSProject.Data.Signal.Base;
 using MathNet.Numerics.Distributions;
 using System;
 using System.Collections.Generic;

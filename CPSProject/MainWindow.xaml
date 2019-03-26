@@ -19,7 +19,7 @@
                         <ColumnDefinition Width="515*"/>
                     </Grid.ColumnDefinitions>
                     <oxy:PlotView Name="RealPlot" Model="{Binding RealPlotModel}" Margin="10" Grid.Column="0"/>
-                    <oxy:PlotView Name="RealHistogram" Margin="10" Grid.Column="1"/>
+                    <oxy:PlotView Name="RealHistogram" Model="{Binding RealHistogramPlotModel}" Margin="10" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Urojone">
@@ -530,5 +530,9 @@
                 </Style>
             </StackPanel.Style>
         </StackPanel>
+        <Grid HorizontalAlignment="Left" Height="34" Margin="1279,313,0,0" VerticalAlignment="Top" Width="143">
+            <Label Content="Ilość przedziałów histogramu:" HorizontalAlignment="Left" Margin="-105,0,0,0" Width="248"/>
+            <TextBox Text="{Binding Path=NumberOfIntervals}" Margin="70,5,5,5"></TextBox>
+        </Grid>
     </Grid>
 </Window>

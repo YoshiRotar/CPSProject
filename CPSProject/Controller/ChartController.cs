@@ -1,6 +1,5 @@
 ﻿using CPSProject.Data;
-using CPSProject.Data.Signal;
-using CPSProject.Data.Signal.Bases;
+using CPSProject.Data.Signal.Base;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -22,16 +21,19 @@ namespace CPSProject.Controller
         private SignalRepresentation secondSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
+        private PlotModel realHisogramPlotModel;
         private LineSeries realSeries1;
         private LineSeries imaginarySeries1;
         private LineSeries realSeries2;
         private LineSeries imaginarySeries2;
+        private ColumnSeries realHistogramSeries;
         private SignalTextProperties textProperties1;
         private SignalTextProperties textProperties2;
         public event PropertyChangedEventHandler PropertyChanged;
         
         public int FirstChartID { get; set; }
         public int SecondChartID { get; set; }
+        public int NumberOfIntervals { get; set; }
 
         public ICommand DrawCommand1
         {
@@ -87,6 +89,19 @@ namespace CPSProject.Controller
             }
         }
 
+        public PlotModel RealHistogramPlotModel
+        {
+            get
+            {
+                return realHisogramPlotModel;
+            }
+            set
+            {
+                realHisogramPlotModel = value;
+                OnPropertyChanged("RealHistogramPlotModel");
+            }
+        }
+
         public SignalTextProperties TextProperties1
         {
             get
@@ -116,6 +131,7 @@ namespace CPSProject.Controller
         {
             FirstChartID = -1;
             SecondChartID = -1;
+            NumberOfIntervals = 5;
 
             firstSignal = new SignalRepresentation();
             secondSignal = new SignalRepresentation();
@@ -126,13 +142,17 @@ namespace CPSProject.Controller
             realSeries2 = new LineSeries();
             imaginarySeries1 = new LineSeries();
             imaginarySeries2 = new LineSeries();
+            realHistogramSeries = new ColumnSeries();
+
             realPlotModel = new PlotModel();
             imaginaryPlotModel = new PlotModel();
+            RealHistogramPlotModel = new PlotModel();
 
             RealPlotModel.Series.Add(realSeries1);
             RealPlotModel.Series.Add(realSeries2);
             ImaginaryPlotModel.Series.Add(imaginarySeries1);
             ImaginaryPlotModel.Series.Add(imaginarySeries2);
+            RealHistogramPlotModel.Series.Add(realHistogramSeries);
         }
 
         private void Draw(ISignal signal, ref LineSeries realSeries, ref LineSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
@@ -177,6 +197,18 @@ namespace CPSProject.Controller
 
             OnPropertyChanged("TextProperties1");
             OnPropertyChanged("TextProperties2");
+
+            List<int> realHisogramUniversum = signal.GenerateRealHistogram(NumberOfIntervals);
+            realHistogramSeries = new ColumnSeries();
+            foreach (int elem in realHisogramUniversum)
+            {
+                realHistogramSeries.Items.Add(new ColumnItem(elem));
+            }
+            RealHistogramPlotModel.Axes.Clear();
+            RealHistogramPlotModel.Series.Clear();
+            realHistogramSeries.FillColor = color;
+            RealHistogramPlotModel.Series.Add(realHistogramSeries);
+            RealHistogramPlotModel.InvalidatePlot(true);
         }
 
 

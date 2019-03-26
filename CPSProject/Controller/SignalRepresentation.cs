@@ -1,5 +1,5 @@
 ﻿using CPSProject.Data.Signal;
-using CPSProject.Data.Signal.Bases;
+using CPSProject.Data.Signal.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

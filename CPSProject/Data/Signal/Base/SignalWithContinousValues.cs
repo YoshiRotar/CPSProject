@@ -4,20 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPSProject.Data.Signal.Bases
+namespace CPSProject.Data.Signal.Base
 {
-    public class SignalWithContinousValues : ISignal
+    public class SignalWithContinousValues : SignalImplementation
     {
         public double StartingMoment { get; set; }
         public double EndingMoment { get; set; }
         public double Frequency { get; set; }
-        public List<Tuple<double, Complex>> Points { get; set; }
-        public double AverageValue { get; set; }
-        public double AbsouluteAverageValue { get; set; }
-        public double AveragePower { get; set; }
-        public double Variance { get; set; }
-        public double EffectiveValue { get; set; }
-        public bool IsLinear { get; set; } = true;
+        public override bool IsLinear { get; set; } = true;
 
         public void CalculateTraits()
         {
@@ -60,11 +54,6 @@ namespace CPSProject.Data.Signal.Bases
             Variance *= prefix;
 
             EffectiveValue = Math.Sqrt(AveragePower);
-        }
-
-        public virtual Complex GenerateSignal(double t)
-        {
-            throw new NotImplementedException();
         }
     }
 }
