@@ -493,7 +493,7 @@
                 <Label Content="RMS:" HorizontalAlignment="Left"/>
                 <Label Content="{Binding Path=TextProperties1.EffectiveValueText}" HorizontalAlignment="Right"/>
             </Grid>
-            <StackPanel.Style>
+            <!--<StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Setter Property="Visibility" Value="Visible"/>
                     <Style.Triggers>
@@ -502,7 +502,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </StackPanel.Style>
+            </StackPanel.Style>-->
         </StackPanel>
         <StackPanel HorizontalAlignment="Left" Height="215" Margin="655,111,0,0" VerticalAlignment="Top" Width="90">
             <Grid>
@@ -525,7 +525,7 @@
                 <Label Content="RMS:" HorizontalAlignment="Left"/>
                 <Label Content="{Binding Path=TextProperties2.EffectiveValueText}" HorizontalAlignment="Right"/>
             </Grid>
-            <StackPanel.Style>
+            <!--<StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Setter Property="Visibility" Value="Visible"/>
                     <Style.Triggers>
@@ -534,8 +534,30 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </StackPanel.Style>
-        </StackPanel>
+            </StackPanel.Style>-->
+      </StackPanel>
+      <StackPanel HorizontalAlignment="Left" Height="215" Margin="1100,30,0,0" VerticalAlignment="Top" Width="90">
+        <Grid>
+          <Label Content="x̅:" HorizontalAlignment="Left"/>
+          <Label Content="{Binding Path=TextProperties3.AverageValueText}" HorizontalAlignment="Right"/>
+        </Grid>
+        <Grid>
+          <Label Content="|x̅|:" HorizontalAlignment="Left"/>
+          <Label Content="{Binding Path=TextProperties3.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
+        </Grid>
+        <Grid>
+          <Label Content="P:" HorizontalAlignment="Left"/>
+          <Label Content="{Binding Path=TextProperties3.AveragePowerText}" HorizontalAlignment="Right"/>
+        </Grid>
+        <Grid>
+          <Label Content="σ²:" HorizontalAlignment="Left"/>
+          <Label Content="{Binding Path=TextProperties3.VarianceText}" HorizontalAlignment="Right"/>
+        </Grid>
+        <Grid>
+          <Label Content="RMS:" HorizontalAlignment="Left"/>
+          <Label Content="{Binding Path=TextProperties3.EffectiveValueText}" HorizontalAlignment="Right"/>
+        </Grid>
+      </StackPanel>
         <Grid HorizontalAlignment="Left" Height="34" Margin="1279,313,0,0" VerticalAlignment="Top" Width="143">
             <Label Content="Ilość przedziałów histogramu:" HorizontalAlignment="Left" Margin="-105,0,0,0" Width="248"/>
             <TextBox Text="{Binding Path=NumberOfIntervals}" Margin="70,5,5,5"></TextBox>

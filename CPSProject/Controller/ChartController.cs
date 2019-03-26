@@ -45,6 +45,7 @@ namespace CPSProject.Controller
         private ColumnSeries realCombinedHistogramSeries;
         private SignalTextProperties textProperties1;
         private SignalTextProperties textProperties2;
+        private SignalTextProperties textProperties3;
         public event PropertyChangedEventHandler PropertyChanged;
         
         public int FirstChartID { get; set; }
@@ -201,16 +202,21 @@ namespace CPSProject.Controller
             if (dlg.ShowDialog() == false) return;
             using (BinaryReader reader = new BinaryReader(File.Open(dlg.FileName, FileMode.Open)))
             {
-                signalRepresentation.Signal = new SignalImplementation();
-                signalRepresentation.Signal.Points = new List<Tuple<double, Complex>>();
+                SignalImplementation signalImplementation = new SignalImplementation();
+                signalImplementation.Points = new List<Tuple<double, Complex>>();
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
                     double xCoordinate = reader.ReadDouble();
                     Complex value = new Complex();
                     value.Real = reader.ReadDouble();
                     value.Imaginary = reader.ReadDouble();
-                    signalRepresentation.Signal.Points.Add(new Tuple<double, Complex>(xCoordinate, value));
+                    signalImplementation.Points.Add(new Tuple<double, Complex>(xCoordinate, value));
                 }
+
+                signalImplementation.StartingMoment = signalImplementation.Points[0].Item1;
+                signalImplementation.EndingMoment = signalImplementation.Points[signalImplementation.Points.Count - 1].Item1;
+                signalImplementation.CalculateTraits();
+                signalRepresentation.Signal = signalImplementation;
             }
         }
 
@@ -265,6 +271,7 @@ namespace CPSProject.Controller
                 OnPropertyChanged("TextProperties1");
             }
         }
+
         public SignalTextProperties TextProperties2
         {
             get
@@ -278,6 +285,19 @@ namespace CPSProject.Controller
             }
         }
 
+        public SignalTextProperties TextProperties3
+        {
+            get
+            {
+                return textProperties3;
+            }
+            set
+            {
+                textProperties3 = value;
+                OnPropertyChanged("TextProperties3");
+            }
+        }
+
         public ICommand AddCommand
         {
             get
@@ -285,7 +305,7 @@ namespace CPSProject.Controller
                 if (addCommand == null)
                 {
                     addCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Add),
+                        param => CombineSignals(Complex.Add, textProperties3),
                         param => CanMakeOpperation());
                 }
                 return addCommand;
@@ -298,7 +318,7 @@ namespace CPSProject.Controller
                 if (subtractCommand == null)
                 {
                     subtractCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Subtract),
+                        param => CombineSignals(Complex.Subtract, textProperties3),
                         param => CanMakeOpperation());
                 }
                 return subtractCommand;
@@ -311,7 +331,7 @@ namespace CPSProject.Controller
                 if (multiplyCommand == null)
                 {
                     multiplyCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Multiply),
+                        param => CombineSignals(Complex.Multiply, textProperties3),
                         param => CanMakeOpperation());
                 }
                 return multiplyCommand;
@@ -324,7 +344,7 @@ namespace CPSProject.Controller
                 if (divideCommand == null)
                 {
                     divideCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Divide),
+                        param => CombineSignals(Complex.Divide, textProperties3),
                         param => CanMakeOpperation());
                 }
                 return divideCommand;
@@ -344,6 +364,7 @@ namespace CPSProject.Controller
             combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();
             TextProperties1 = new SignalTextProperties();
             TextProperties2 = new SignalTextProperties();
+            TextProperties3 = new SignalTextProperties();
 
             realSeries1 = new ScatterSeries();
             realSeries2 = new ScatterSeries();
@@ -454,7 +475,7 @@ namespace CPSProject.Controller
             RealHistogramPlotModel.InvalidatePlot(true);
         }
 
-        private void CombineSignals(Func<Complex, Complex, Complex> func)
+        private void CombineSignals(Func<Complex, Complex, Complex> func, SignalTextProperties textTraits)
         {
             List<Tuple<double, Complex>> signal1 = firstSignal.Signal.Points;
             List<Tuple<double, Complex>> signal2 = secondSignal.Signal.Points;
@@ -497,14 +518,30 @@ namespace CPSProject.Controller
             realCombinedSeries.MarkerSize = 1;
             imaginaryCombinedSeries.MarkerSize = 1;
 
+            SignalImplementation signalImplementation = new SignalImplementation();
+            signalImplementation.Points = new List<Tuple<double, Complex>>();
+
             foreach (Tuple<double, Complex> tuple in outputSignal)
             {
                 realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
-                combinedSignal.Signal.Points.Add(tuple);
+                signalImplementation.Points.Add(tuple);
             }
 
             ClearPlot();
+
+            signalImplementation.StartingMoment = signalImplementation.Points[0].Item1;
+            signalImplementation.EndingMoment = signalImplementation.Points[signalImplementation.Points.Count-1].Item1;
+            signalImplementation.CalculateTraits();
+            combinedSignal.Signal = signalImplementation;
+
+            textTraits.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
+            textTraits.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
+            textTraits.AveragePowerText = combinedSignal.Signal.AveragePower.ToString("N3");
+            textTraits.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
+            textTraits.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
+
+            OnPropertyChanged("TextProperties3");
 
             realPlotModel.Series.Add(realCombinedSeries);
             imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
