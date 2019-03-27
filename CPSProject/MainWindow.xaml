@@ -269,7 +269,7 @@
       <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand2}" HorizontalAlignment="Left" Margin="480,280,0,0" VerticalAlignment="Top" Width="127"/>
       <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand2}" HorizontalAlignment="Left" Margin="617,280,0,0" VerticalAlignment="Top" Width="127"/>
       <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand3}" HorizontalAlignment="Left" Margin="982,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Wyczyść wykres" Command="{Binding Path=ClearCommand}" HorizontalAlignment="Left" Margin="750,320,0,0" VerticalAlignment="Top" Width="127"/>
+      <Button Content="Wyczyść wykres" Command="{Binding Path=ClearCommand}"   Margin="1268,280,0,0" VerticalAlignment="Top" Width="143"/>
         <StackPanel HorizontalAlignment="Left" Height="255" Margin="480,71,0,0" VerticalAlignment="Top" Width="96">
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
