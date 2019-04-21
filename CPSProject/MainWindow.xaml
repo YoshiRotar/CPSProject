@@ -33,7 +33,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <ComboBox Name="ComboFirstSignal" SelectedIndex="{Binding Path=FirstChartID}" HorizontalAlignment="Left" Margin="46,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
+        <ComboBox Name="ComboFirstSignal" SelectedIndex="{Binding Path=FirstChart.SelectedIndex}" HorizontalAlignment="Left" Margin="46,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise1">Szum o rozkładzie jednostajnym</ComboBoxItem>
             <ComboBoxItem Name="GaussianNoise1">Szum o rozkładzie gaussowskim</ComboBoxItem>
             <ComboBoxItem Name="SinusoidalSignal1">Sygnał sinusoidalny</ComboBoxItem>
@@ -46,7 +46,7 @@
             <ComboBoxItem Name="KroneckerDelta1">Impuls jednostkowy</ComboBoxItem>
             <ComboBoxItem Name="ImpulseNoise1">Szum impulsowy</ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="ComboSecondSignal" SelectedIndex="{Binding Path=SecondChartID}" HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
+        <ComboBox Name="ComboSecondSignal" SelectedIndex="{Binding Path=SecondChart.SelectedIndex}" HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Width="265" Height="21">
             <ComboBoxItem Name="UniformNoise2">Szum o rozkładzie jednostajnym</ComboBoxItem>
             <ComboBoxItem Name="GaussianNoise2">Szum o rozkładzie gaussowskim</ComboBoxItem>
             <ComboBoxItem Name="SinusoidalSignal2">Sygnał sinusoidalny</ComboBoxItem>
@@ -65,7 +65,7 @@
         <StackPanel HorizontalAlignment="Left" Height="255" Margin="46,71,0,0" VerticalAlignment="Top" Width="96">
             <Grid Margin="0,2,0,2">
                 <Label Content="f:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -79,7 +79,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="A:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -93,7 +93,7 @@
             </Grid>
             <Grid  Margin="0,2,0,2">
                 <Label Content="T:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.PeriodText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.PeriodText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -122,7 +122,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="t1:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Visible"/>
@@ -136,7 +136,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="d:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.DurationText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.DurationText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -177,7 +177,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="kw:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -197,7 +197,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="ts:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -211,7 +211,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="ns:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -225,7 +225,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="l:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -239,7 +239,7 @@
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Label Content="p:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties1.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=FirstChart.SignalProperties.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
                 <Grid.Style>
                     <Style>
                         <Setter Property="Grid.Visibility" Value="Collapsed"/>
@@ -252,7 +252,7 @@
                 </Grid.Style>
             </Grid>
         </StackPanel>
-        <Button Content="Rysuj" Command="{Binding Path=DrawCommand1}" HorizontalAlignment="Left" Margin="236,71,0,0" VerticalAlignment="Top" Width="75">
+        <Button Content="Rysuj" Command="{Binding Path=DrawCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="236,71,0,0" VerticalAlignment="Top" Width="75">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Visibility" Value="Visible"/>
@@ -264,12 +264,12 @@
                 </Style>
             </Button.Style>
         </Button>
-      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand1}" HorizontalAlignment="Left" Margin="46,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand1}" HorizontalAlignment="Left" Margin="183,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand2}" HorizontalAlignment="Left" Margin="480,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand2}" HorizontalAlignment="Left" Margin="617,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand3}" HorizontalAlignment="Left" Margin="982,280,0,0" VerticalAlignment="Top" Width="127"/>
-      <Button Content="Wyczyść wykres" Command="{Binding Path=ClearCommand}"   Margin="1268,280,0,0" VerticalAlignment="Top" Width="143"/>
+        <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="47,265,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="184,265,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand}" CommandParameter="2" HorizontalAlignment="Left" Margin="481,265,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Wczytaj wykres" Command="{Binding Path=LoadCommand}" CommandParameter="2" HorizontalAlignment="Left" Margin="618,265,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Zapisz wykres" Command="{Binding Path=SaveCommand}" CommandParameter="3" HorizontalAlignment="Left" Margin="982,265,0,0" VerticalAlignment="Top" Width="127"/>
+        <Button Content="Wyczyść wykres" Command="{Binding Path=ClearCommand}"   Margin="1279,265,10,0" VerticalAlignment="Top" Width="143"/>
         <StackPanel HorizontalAlignment="Left" Height="255" Margin="480,71,0,0" VerticalAlignment="Top" Width="96">
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -283,7 +283,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="f:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.FrequencyText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -297,7 +297,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="A:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.AmplitudeText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid  Margin="0,2,0,2">
                 <Grid.Style>
@@ -326,7 +326,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="T:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.PeriodText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.PeriodText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -340,7 +340,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="t1:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.StartingMomentText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -381,7 +381,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="d:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.DurationText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.DurationText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -401,7 +401,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="kw:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.DutyCycleText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -415,7 +415,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="ts:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.TimeOfStepText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -429,7 +429,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="ns:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.NumberOfSampleText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -443,7 +443,7 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="l:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.NumberOfAllSamplesText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
             <Grid Margin="0,2,0,2">
                 <Grid.Style>
@@ -457,10 +457,10 @@
                     </Style>
                 </Grid.Style>
                 <Label Content="p:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Path=TextProperties2.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
+                <TextBox Text="{Binding Path=SecondChart.SignalProperties.ProbabilityText}" HorizontalAlignment="Right" Width="60"/>
             </Grid>
         </StackPanel>
-        <Button Content="Rysuj" Command="{Binding Path=DrawCommand2}" HorizontalAlignment="Left" Margin="670,71,0,0" VerticalAlignment="Top" Width="75">
+        <Button Content="Rysuj" Command="{Binding Path=DrawCommand}" CommandParameter="2" HorizontalAlignment="Left" Margin="670,71,0,0" VerticalAlignment="Top" Width="75">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Visibility" Value="Visible"/>
@@ -475,23 +475,23 @@
         <StackPanel HorizontalAlignment="Left" Height="215" Margin="222,111,0,0" VerticalAlignment="Top" Width="90">
             <Grid>
                 <Label Content="x̅:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties1.AverageValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=FirstChart.SignalProperties.AverageValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="|x̅|:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties1.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=FirstChart.SignalProperties.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="P:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties1.AveragePowerText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=FirstChart.SignalProperties.AveragePowerText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="σ²:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties1.VarianceText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=FirstChart.SignalProperties.VarianceText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="RMS:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties1.EffectiveValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=FirstChart.SignalProperties.EffectiveValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <!--<StackPanel.Style>
                 <Style TargetType="StackPanel">
@@ -507,23 +507,23 @@
         <StackPanel HorizontalAlignment="Left" Height="215" Margin="655,111,0,0" VerticalAlignment="Top" Width="90">
             <Grid>
                 <Label Content="x̅:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties2.AverageValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=SecondChart.SignalProperties.AverageValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="|x̅|:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties2.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=SecondChart.SignalProperties.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="P:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties2.AveragePowerText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=SecondChart.SignalProperties.AveragePowerText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="σ²:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties2.VarianceText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=SecondChart.SignalProperties.VarianceText}" HorizontalAlignment="Right"/>
             </Grid>
             <Grid>
                 <Label Content="RMS:" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Path=TextProperties2.EffectiveValueText}" HorizontalAlignment="Right"/>
+                <Label Content="{Binding Path=SecondChart.SignalProperties.EffectiveValueText}" HorizontalAlignment="Right"/>
             </Grid>
             <!--<StackPanel.Style>
                 <Style TargetType="StackPanel">
@@ -535,29 +535,29 @@
                     </Style.Triggers>
                 </Style>
             </StackPanel.Style>-->
-      </StackPanel>
-      <StackPanel HorizontalAlignment="Left" Height="215" Margin="1100,30,0,0" VerticalAlignment="Top" Width="90">
-        <Grid>
-          <Label Content="x̅:" HorizontalAlignment="Left"/>
-          <Label Content="{Binding Path=TextProperties3.AverageValueText}" HorizontalAlignment="Right"/>
-        </Grid>
-        <Grid>
-          <Label Content="|x̅|:" HorizontalAlignment="Left"/>
-          <Label Content="{Binding Path=TextProperties3.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
-        </Grid>
-        <Grid>
-          <Label Content="P:" HorizontalAlignment="Left"/>
-          <Label Content="{Binding Path=TextProperties3.AveragePowerText}" HorizontalAlignment="Right"/>
-        </Grid>
-        <Grid>
-          <Label Content="σ²:" HorizontalAlignment="Left"/>
-          <Label Content="{Binding Path=TextProperties3.VarianceText}" HorizontalAlignment="Right"/>
-        </Grid>
-        <Grid>
-          <Label Content="RMS:" HorizontalAlignment="Left"/>
-          <Label Content="{Binding Path=TextProperties3.EffectiveValueText}" HorizontalAlignment="Right"/>
-        </Grid>
-      </StackPanel>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="215" Margin="1100,30,0,0" VerticalAlignment="Top" Width="90">
+            <Grid>
+                <Label Content="x̅:" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Path=TextProperties3.AverageValueText}" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid>
+                <Label Content="|x̅|:" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Path=TextProperties3.AbsouluteAverageValueText}" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid>
+                <Label Content="P:" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Path=TextProperties3.AveragePowerText}" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid>
+                <Label Content="σ²:" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Path=TextProperties3.VarianceText}" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid>
+                <Label Content="RMS:" HorizontalAlignment="Left"/>
+                <Label Content="{Binding Path=TextProperties3.EffectiveValueText}" HorizontalAlignment="Right"/>
+            </Grid>
+        </StackPanel>
         <Grid HorizontalAlignment="Left" Height="34" Margin="1279,313,0,0" VerticalAlignment="Top" Width="143">
             <Label Content="Ilość przedziałów histogramu:" HorizontalAlignment="Left" Margin="-105,0,0,0" Width="248"/>
             <TextBox Text="{Binding Path=NumberOfIntervals}" Margin="70,5,5,5"></TextBox>
@@ -566,5 +566,6 @@
         <Button Content="Odejmij" Command="{Binding Path=SubtractCommand}" HorizontalAlignment="Left" Margin="982,61,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Wymnóż" Command="{Binding Path=MultiplyCommand}" HorizontalAlignment="Left" Margin="982,86,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Podziel" Command="{Binding Path=DivideCommand}" HorizontalAlignment="Left" Margin="982,111,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Kwantyzuj" HorizontalAlignment="Left" Margin="47,290,0,0" VerticalAlignment="Top" Width="264" Command="{Binding Path=OpenQuantizeWindow}" CommandParameter="1"/>
     </Grid>
 </Window>

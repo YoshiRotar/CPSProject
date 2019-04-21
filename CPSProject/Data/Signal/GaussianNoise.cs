@@ -45,6 +45,8 @@ namespace CPSProject.Data.Signal
                 Imaginary = 0
             };
 
+            while (result.Real > Amplitude || result.Real < -Amplitude) result.Real = Amplitude/3.0 * gaussianRandom.Sample();
+
             return result;
         }
     }

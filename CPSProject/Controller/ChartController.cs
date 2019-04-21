@@ -11,212 +11,67 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CPSProject.Controller
 {
     public class ChartController : INotifyPropertyChanged
     {
-        private ICommand drawCommand1;
-        private ICommand drawCommand2;
-        private ICommand saveCommand1;
-        private ICommand loadCommand1;
-        private ICommand saveCommand2;
-        private ICommand loadCommand2;
-        private ICommand saveCommand3;
+        private ICommand drawCommand;
+        private ICommand saveCommand;
+        private ICommand loadCommand;
         private ICommand addCommand;
         private ICommand subtractCommand;
         private ICommand multiplyCommand;
         private ICommand divideCommand;
         private ICommand clearCommand;
-        private SignalRepresentation firstSignal;
-        private SignalRepresentation secondSignal;
+        private ICommand quantizeCommand;
+        private ICommand openQuantizeWindow;
         private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
         private PlotModel realHistogramPlotModel;
-        private ScatterSeries realSeries1;
-        private ScatterSeries imaginarySeries1;
-        private ScatterSeries realSeries2;
-        private ScatterSeries imaginarySeries2;
+        private ChartRepresentation firstChart;
+        private ChartRepresentation secondChart;
         private ScatterSeries realCombinedSeries;
         private ScatterSeries imaginaryCombinedSeries;
         private ColumnSeries realHistogramSeries;
         private ColumnSeries realCombinedHistogramSeries;
-        private SignalTextProperties textProperties1;
-        private SignalTextProperties textProperties2;
-        private SignalTextProperties textProperties3;
+        private SignalTextProperties combinedTextProperties;
+        private string samplingFrequencyText;
+        private string numberOfQuantizationLevelsText;
+        public int numberOfQuantizationLevels;
+        public double samplingFrequency;
+
         public event PropertyChangedEventHandler PropertyChanged;
         
-        public int FirstChartID { get; set; }
-        public int SecondChartID { get; set; }
         public int NumberOfIntervals { get; set; }
+        
 
-        public ICommand DrawCommand1
+        public string SamplingFrequencyText
         {
             get
             {
-                if(drawCommand1 == null)
-                {
-                    drawCommand1 = new RelayCommand(
-                        param => Draw(FirstChartID, ref firstSignal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1),
-                        param => firstSignal.CanDraw(FirstChartID,TextProperties1));
-                }
-                return drawCommand1;
+                return samplingFrequencyText;
+            }
+            set
+            {
+                samplingFrequencyText = value;
+                OnPropertyChanged("SamplingFrequencyText");
             }
         }
 
-        public ICommand DrawCommand2
+        public string NumberOfQuantizationLevelsText
         {
             get
             {
-                if (drawCommand2 == null)
-                {
-                    drawCommand2 = new RelayCommand(
-                        param => Draw(SecondChartID, ref secondSignal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2),
-                        param => secondSignal.CanDraw(SecondChartID, TextProperties2));
-                }
-                return drawCommand2;
+                return numberOfQuantizationLevelsText;
             }
-        }
-
-        public ICommand SaveCommand1
-        {
-            get
+            set
             {
-                if (saveCommand1 == null)
-                {
-                    saveCommand1 = new RelayCommand(
-                        param => SavePlot(firstSignal.Signal),
-                        param => CanSavePlot(firstSignal.Signal));
-                }
-                return saveCommand1;
-            }
-        }
-
-        public ICommand SaveCommand2
-        {
-            get
-            {
-                if (saveCommand2 == null)
-                {
-                    saveCommand2 = new RelayCommand(
-                        param => SavePlot(secondSignal.Signal),
-                        param => CanSavePlot(secondSignal.Signal));
-                }
-                return saveCommand2;
-            }
-        }
-
-        public ICommand SaveCommand3
-        {
-            get
-            {
-                if (saveCommand3 == null)
-                {
-                    saveCommand3 = new RelayCommand(
-                        param => SavePlot(combinedSignal.Signal),
-                        param => CanSavePlot(combinedSignal.Signal));
-                }
-                return saveCommand3;
-            }
-        }
-
-        public ICommand LoadCommand1
-        {
-            get
-            {
-                if (loadCommand1 == null)
-                {
-                    loadCommand1 = new RelayCommand(
-                        param => { LoadPlot(firstSignal); Draw(-1, ref firstSignal, ref realSeries1, ref imaginarySeries1, OxyColors.Blue, ref textProperties1); },
-                        param => true);
-                }
-                return loadCommand1;
-            }
-        }
-
-        public ICommand LoadCommand2
-        {
-            get
-            {
-                if (loadCommand2 == null)
-                {
-                    loadCommand2 = new RelayCommand(
-                        param => { LoadPlot(secondSignal); Draw(-1, ref secondSignal, ref realSeries2, ref imaginarySeries2, OxyColors.Red, ref textProperties2); },
-                        param => true);
-                }
-                return loadCommand2;
-            }
-        }
-
-        public ICommand ClearCommand
-        {
-            get
-            {
-                if (clearCommand == null)
-                {
-                    clearCommand = new RelayCommand(
-                        param => ClearPlot(),
-                        param => CanClear());
-                }
-                return clearCommand;
-            }
-        }
-
-        private void SavePlot(ISignal signal)
-        {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = "xD";
-            dlg.AddExtension = true;
-            if (dlg.ShowDialog() == false) return;
-            using (BinaryWriter writer = new BinaryWriter(File.Open(dlg.FileName, FileMode.Create)))
-            {
-                foreach (Tuple<double, Complex> point in signal.Points)
-                {
-                    writer.Write(point.Item1);
-                    writer.Write(point.Item2.Real);
-                    writer.Write(point.Item2.Imaginary);
-                }
-            }
-        }
-
-        private bool CanSavePlot(ISignal signal)
-        {
-            if (signal == null) return false;
-            return (signal.Points.Count != 0);
-        }
-
-        private bool CanClear()
-        {
-            if (RealPlotModel.Axes.Count != 0) return true;
-            if (ImaginaryPlotModel.Axes.Count != 0) return true;
-            if (RealHistogramPlotModel.Axes.Count != 0) return true;
-            return false;
-        }
-
-        private void LoadPlot(SignalRepresentation signalRepresentation)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = "*All Files | *.xD";
-            if (dlg.ShowDialog() == false) return;
-            using (BinaryReader reader = new BinaryReader(File.Open(dlg.FileName, FileMode.Open)))
-            {
-                SignalImplementation signalImplementation = new SignalImplementation();
-                signalImplementation.Points = new List<Tuple<double, Complex>>();
-                while (reader.BaseStream.Position != reader.BaseStream.Length)
-                {
-                    double xCoordinate = reader.ReadDouble();
-                    Complex value = new Complex();
-                    value.Real = reader.ReadDouble();
-                    value.Imaginary = reader.ReadDouble();
-                    signalImplementation.Points.Add(new Tuple<double, Complex>(xCoordinate, value));
-                }
-
-                signalImplementation.StartingMoment = signalImplementation.Points[0].Item1;
-                signalImplementation.EndingMoment = signalImplementation.Points[signalImplementation.Points.Count - 1].Item1;
-                signalImplementation.CalculateTraits();
-                signalRepresentation.Signal = signalImplementation;
+                numberOfQuantizationLevelsText = value;
+                OnPropertyChanged("NumberOfQuantizationLevels");
             }
         }
 
@@ -259,29 +114,29 @@ namespace CPSProject.Controller
             }
         }
 
-        public SignalTextProperties TextProperties1
+        public ChartRepresentation FirstChart
         {
             get
             {
-                return textProperties1;
+                return firstChart;
             }
             set
             {
-                textProperties1 = value;
-                OnPropertyChanged("TextProperties1");
+                firstChart = value;
+                OnPropertyChanged("FirstChart");
             }
         }
 
-        public SignalTextProperties TextProperties2
+        public ChartRepresentation SecondChart
         {
             get
             {
-                return textProperties2;
+                return secondChart;
             }
             set
             {
-                textProperties2 = value;
-                OnPropertyChanged("TextProperties2");
+                secondChart = value;
+                OnPropertyChanged("SecondChart");
             }
         }
 
@@ -289,12 +144,68 @@ namespace CPSProject.Controller
         {
             get
             {
-                return textProperties3;
+                return combinedTextProperties;
             }
             set
             {
-                textProperties3 = value;
+                combinedTextProperties = value;
                 OnPropertyChanged("TextProperties3");
+            }
+        }
+
+        public ICommand DrawCommand
+        {
+            get
+            {
+                if(drawCommand == null)
+                {
+                    drawCommand = new RelayCommand(
+                        param => Draw(param),
+                        param => CanDraw(param));
+                }
+                return drawCommand;
+            }
+        }
+
+        public ICommand SaveCommand
+        {
+            get
+            {
+                if (saveCommand == null)
+                {
+                    saveCommand = new RelayCommand(
+                        param => SavePlot(param),
+                        param => CanSavePlot(param));
+                }
+                return saveCommand;
+            }
+        }
+
+        public ICommand LoadCommand
+        {
+            get
+            {
+                if (loadCommand == null)
+                {
+                    loadCommand = new RelayCommand(
+                        param => { LoadPlot(param); Draw(param); },
+                        param => true);
+                }
+                return loadCommand;
+            }
+        }
+
+        public ICommand ClearCommand
+        {
+            get
+            {
+                if (clearCommand == null)
+                {
+                    clearCommand = new RelayCommand(
+                        param => ClearPlot(),
+                        param => CanClear());
+                }
+                return clearCommand;
             }
         }
 
@@ -305,7 +216,7 @@ namespace CPSProject.Controller
                 if (addCommand == null)
                 {
                     addCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Add, textProperties3),
+                        param => CombineSignals(Complex.Add, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return addCommand;
@@ -318,7 +229,7 @@ namespace CPSProject.Controller
                 if (subtractCommand == null)
                 {
                     subtractCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Subtract, textProperties3),
+                        param => CombineSignals(Complex.Subtract, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return subtractCommand;
@@ -331,7 +242,7 @@ namespace CPSProject.Controller
                 if (multiplyCommand == null)
                 {
                     multiplyCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Multiply, textProperties3),
+                        param => CombineSignals(Complex.Multiply, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return multiplyCommand;
@@ -344,32 +255,72 @@ namespace CPSProject.Controller
                 if (divideCommand == null)
                 {
                     divideCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Divide, textProperties3),
+                        param => CombineSignals(Complex.Divide, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return divideCommand;
             }
         }
 
+        public ICommand QuantizeCommand
+        {
+            get
+            {
+                if(quantizeCommand == null)
+                {
+                    quantizeCommand = new RelayCommand(
+                        param => Quantize(param),
+                        param => CanQuantize());
+                }
+                return quantizeCommand;
+            }
+        }
+
+        public ICommand OpenQuantizeWindow
+        {
+            get
+            {
+                if (openQuantizeWindow == null)
+                {
+                    openQuantizeWindow = new RelayCommand(
+                        param => OpenNewWindow(param),
+                        param => CanOpenQuantize(param));
+                }
+                return openQuantizeWindow;
+            }
+        }
+
         public ChartController()
         {
-            FirstChartID = -1;
-            SecondChartID = -1;
+            FirstChart = new ChartRepresentation
+            {
+                SelectedIndex = -1,
+                SignalRepresentation = new SignalRepresentation(),
+                SignalProperties = new SignalTextProperties(),
+                PlotColor = OxyColors.Blue,
+                RealSeries = new ScatterSeries(),
+                ImaginarySeries = new ScatterSeries()
+            };
+            SecondChart = new ChartRepresentation
+            {
+                SelectedIndex = -1,
+                SignalRepresentation = new SignalRepresentation(),
+                SignalProperties = new SignalTextProperties(),
+                PlotColor = OxyColors.Red,
+                RealSeries = new ScatterSeries(),
+                ImaginarySeries = new ScatterSeries()
+            };
+
             NumberOfIntervals = 5;
 
-            firstSignal = new SignalRepresentation();
-            secondSignal = new SignalRepresentation();
-            combinedSignal = new SignalRepresentation();
-            combinedSignal.Signal = new SignalImplementation();
-            combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();
-            TextProperties1 = new SignalTextProperties();
-            TextProperties2 = new SignalTextProperties();
+            combinedSignal = new SignalRepresentation
+            {
+                Signal = new SignalImplementation()
+            };
+            combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();   
+           
             TextProperties3 = new SignalTextProperties();
-
-            realSeries1 = new ScatterSeries();
-            realSeries2 = new ScatterSeries();
-            imaginarySeries1 = new ScatterSeries();
-            imaginarySeries2 = new ScatterSeries();
+            
             realCombinedSeries = new ScatterSeries();
             imaginaryCombinedSeries = new ScatterSeries();
             realHistogramSeries = new ColumnSeries();
@@ -378,33 +329,60 @@ namespace CPSProject.Controller
             imaginaryPlotModel = new PlotModel();
             realHistogramPlotModel = new PlotModel();
 
-            RealPlotModel.Series.Add(realSeries1);
-            RealPlotModel.Series.Add(realSeries2);
-            ImaginaryPlotModel.Series.Add(imaginarySeries1);
-            ImaginaryPlotModel.Series.Add(imaginarySeries2);
+            RealPlotModel.Series.Add(FirstChart.RealSeries);
+            RealPlotModel.Series.Add(SecondChart.RealSeries);
+            ImaginaryPlotModel.Series.Add(FirstChart.ImaginarySeries);
+            ImaginaryPlotModel.Series.Add(SecondChart.ImaginarySeries);
             realHistogramPlotModel.Series.Add(realHistogramSeries);
         }
 
-        private void Draw(int id, ref SignalRepresentation signal, ref ScatterSeries realSeries, ref ScatterSeries imaginarySeries, OxyColor color, ref SignalTextProperties textTraits)
+        private bool CanDraw(object param)
         {
-            if (id == 0) signal.Signal = new UnitaryNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
-            if (id == 1) signal.Signal = new GaussianNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration);
-            if (id == 2) signal.Signal = new SinusoidalSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
-            if (id == 3) signal.Signal = new SinusoidalSignalHalfRectified(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
-            if (id == 4) signal.Signal = new SinusoidalSignalFullRectified(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration);
-            if (id == 5) signal.Signal = new RectangularSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
-            if (id == 6) signal.Signal = new RectangularSimetricalSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
-            if (id == 7) signal.Signal = new TriangularSignal(signal.frequency, signal.amplitude, signal.period, signal.startingMoment, signal.duration, signal.dutyCycle);
-            if (id == 8) signal.Signal = new StepFunctionSignal(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.timeOfStep);
-            if (id == 9) signal.Signal = new KroneckerDelta(signal.frequency, signal.amplitude, signal.startingMoment, signal.numberOfAllSamples, signal.numberOfSample);
-            if (id == 10) signal.Signal = new ImpulseNoise(signal.frequency, signal.amplitude, signal.startingMoment, signal.duration, signal.probability);
+            switch (param.ToString())
+            {
+                case "1":
+                    return FirstChart.CanDraw();
+                case "2":
+                    return SecondChart.CanDraw();
+                default:
+                    return false;
+            }
+        }
 
-            if (signal.Signal == null) return;
+        private void Draw(object param)
+        {
+            ChartRepresentation chart;
+
+            switch(param.ToString())
+            {
+                case "1":
+                    chart = FirstChart;
+                    break;
+                case "2":
+                    chart = SecondChart;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            if (chart.SelectedIndex == 0) chart.SignalRepresentation.Signal = new UnitaryNoise(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration);
+            if (chart.SelectedIndex == 1) chart.SignalRepresentation.Signal = new GaussianNoise(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration);
+            if (chart.SelectedIndex == 2) chart.SignalRepresentation.Signal = new SinusoidalSignal(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration);
+            if (chart.SelectedIndex == 3) chart.SignalRepresentation.Signal = new SinusoidalSignalHalfRectified(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration);
+            if (chart.SelectedIndex == 4) chart.SignalRepresentation.Signal = new SinusoidalSignalFullRectified(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration);
+            if (chart.SelectedIndex == 5) chart.SignalRepresentation.Signal = new RectangularSignal(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration, chart.SignalRepresentation.dutyCycle);
+            if (chart.SelectedIndex == 6) chart.SignalRepresentation.Signal = new RectangularSimetricalSignal(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration, chart.SignalRepresentation.dutyCycle);
+            if (chart.SelectedIndex == 7) chart.SignalRepresentation.Signal = new TriangularSignal(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.period, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration, chart.SignalRepresentation.dutyCycle);
+            if (chart.SelectedIndex == 8) chart.SignalRepresentation.Signal = new StepFunctionSignal(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration, chart.SignalRepresentation.timeOfStep);
+            if (chart.SelectedIndex == 9) chart.SignalRepresentation.Signal = new KroneckerDelta(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.numberOfAllSamples, chart.SignalRepresentation.numberOfSample);
+            if (chart.SelectedIndex == 10) chart.SignalRepresentation.Signal = new ImpulseNoise(chart.SignalRepresentation.frequency, chart.SignalRepresentation.amplitude, chart.SignalRepresentation.startingMoment, chart.SignalRepresentation.duration, chart.SignalRepresentation.probability);
+
+            if (chart.SignalRepresentation.Signal == null) return;
 
             combinedSignal.Signal.Points.RemoveRange(0, combinedSignal.Signal.Points.Count);
 
-            RealPlotModel.Series.Remove(realSeries);
-            ImaginaryPlotModel.Series.Remove(imaginarySeries);
+            RealPlotModel.Series.Remove(chart.RealSeries);
+            ImaginaryPlotModel.Series.Remove(chart.ImaginarySeries);
             RealPlotModel.Series.Remove(realCombinedSeries);
             ImaginaryPlotModel.Series.Remove(imaginaryCombinedSeries);
 
@@ -413,40 +391,40 @@ namespace CPSProject.Controller
 
             List<ScatterPoint> realUniversum = new List<ScatterPoint>();
             List<ScatterPoint> imaginaryUniversum = new List<ScatterPoint>();
-            foreach(Tuple<double, Complex> tuple in signal.Signal.Points)
+            foreach(Tuple<double, Complex> tuple in chart.SignalRepresentation.Signal.Points)
             {
                 realUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
             
 
-            realSeries = new ScatterSeries();
-            imaginarySeries = new ScatterSeries();
+            chart.RealSeries = new ScatterSeries();
+            chart.ImaginarySeries = new ScatterSeries();
 
-            realSeries.MarkerType = MarkerType.Circle;
-            imaginarySeries.MarkerType = MarkerType.Circle;
-            realSeries.MarkerFill = color;
-            imaginarySeries.MarkerFill = color;
-            realSeries.MarkerSize = 1;
-            imaginarySeries.MarkerSize = 1;
+            chart.RealSeries.MarkerType = MarkerType.Circle;
+            chart.ImaginarySeries.MarkerType = MarkerType.Circle;
+            chart.RealSeries.MarkerFill = chart.PlotColor;
+            chart.ImaginarySeries.MarkerFill = chart.PlotColor;
+            chart.RealSeries.MarkerSize = 1;
+            chart.ImaginarySeries.MarkerSize = 1;
 
-            realSeries.Points.AddRange(realUniversum);
-            imaginarySeries.Points.AddRange(imaginaryUniversum);
-            RealPlotModel.Series.Add(realSeries);
-            ImaginaryPlotModel.Series.Add(imaginarySeries);
+            chart.RealSeries.Points.AddRange(realUniversum);
+            chart.ImaginarySeries.Points.AddRange(imaginaryUniversum);
+            RealPlotModel.Series.Add(chart.RealSeries);
+            ImaginaryPlotModel.Series.Add(chart.ImaginarySeries);
             RealPlotModel.InvalidatePlot(true);
             ImaginaryPlotModel.InvalidatePlot(true);
 
-            textTraits.AverageValueText = signal.Signal.AverageValue.ToString("N3");
-            textTraits.AbsouluteAverageValueText = signal.Signal.AbsouluteAverageValue.ToString("N3");
-            textTraits.AveragePowerText = signal.Signal.AveragePower.ToString("N3");
-            textTraits.VarianceText = signal.Signal.Variance.ToString("N3");
-            textTraits.EffectiveValueText = signal.Signal.EffectiveValue.ToString("N3");
+            chart.SignalProperties.AverageValueText = chart.SignalRepresentation.Signal.AverageValue.ToString("N3");
+            chart.SignalProperties.AbsouluteAverageValueText = chart.SignalRepresentation.Signal.AbsouluteAverageValue.ToString("N3");
+            chart.SignalProperties.AveragePowerText = chart.SignalRepresentation.Signal.AveragePower.ToString("N3");
+            chart.SignalProperties.VarianceText = chart.SignalRepresentation.Signal.Variance.ToString("N3");
+            chart.SignalProperties.EffectiveValueText = chart.SignalRepresentation.Signal.EffectiveValue.ToString("N3");
 
-            OnPropertyChanged("TextProperties1");
-            OnPropertyChanged("TextProperties2");
+            OnPropertyChanged("FirstChart");
+            OnPropertyChanged("SecondChart");
 
-            List<int> realHisogramUniversum = signal.Signal.GenerateRealHistogram(NumberOfIntervals);
+            List<int> realHisogramUniversum = chart.SignalRepresentation.Signal.GenerateRealHistogram(NumberOfIntervals);
             realHistogramSeries = new ColumnSeries();
             foreach (int elem in realHisogramUniversum)
             {
@@ -454,14 +432,53 @@ namespace CPSProject.Controller
             }
             realHistogramPlotModel.Axes.Clear();
             realHistogramPlotModel.Series.Clear();
-            realHistogramSeries.FillColor = color;
+            realHistogramSeries.FillColor = chart.PlotColor;
             realHistogramPlotModel.Series.Add(realHistogramSeries);
             realHistogramPlotModel.InvalidatePlot(true);
         }
 
+        private bool CanOpenQuantize(object param)
+        {
+            switch (param.ToString())
+            {
+                case "1":
+                    return FirstChart.SignalRepresentation.Signal != null;
+                default:
+                    return false;
+            }
+        }
+
+        private void OpenNewWindow(object param)
+        {
+            Window quantizeWindow = new QuentizeWindow
+            {
+                Tag = param
+            };
+            quantizeWindow.ShowDialog();
+        }
+
+        private bool CanQuantize()
+        {
+            if (!double.TryParse(SamplingFrequencyText, out samplingFrequency)) return false;
+            if (!int.TryParse(NumberOfQuantizationLevelsText, out numberOfQuantizationLevels)) return false;
+            return true;
+        }
+
+        private void Quantize(object param)
+        {
+            switch(param.ToString())
+            {
+                case "1":
+
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
         private bool CanMakeOpperation()
         {
-            if (firstSignal.Signal != null && secondSignal.Signal != null) return true;
+            if (FirstChart.SignalRepresentation.Signal != null && SecondChart.SignalRepresentation.Signal != null) return true;
             return false;
         }
 
@@ -477,8 +494,8 @@ namespace CPSProject.Controller
 
         private void CombineSignals(Func<Complex, Complex, Complex> func, SignalTextProperties textTraits)
         {
-            List<Tuple<double, Complex>> signal1 = firstSignal.Signal.Points;
-            List<Tuple<double, Complex>> signal2 = secondSignal.Signal.Points;
+            List<Tuple<double, Complex>> signal1 = FirstChart.SignalRepresentation.Signal.Points;
+            List<Tuple<double, Complex>> signal2 = SecondChart.SignalRepresentation.Signal.Points;
             List<Tuple<double, Complex>> outputSignal = new List<Tuple<double, Complex>>();
 
             int i = 0;
@@ -518,8 +535,10 @@ namespace CPSProject.Controller
             realCombinedSeries.MarkerSize = 1;
             imaginaryCombinedSeries.MarkerSize = 1;
 
-            SignalImplementation signalImplementation = new SignalImplementation();
-            signalImplementation.Points = new List<Tuple<double, Complex>>();
+            SignalImplementation signalImplementation = new SignalImplementation
+            {
+                Points = new List<Tuple<double, Complex>>()
+            };
 
             foreach (Tuple<double, Complex> tuple in outputSignal)
             {
@@ -575,8 +594,120 @@ namespace CPSProject.Controller
             realHistogramPlotModel.Series.Add(realCombinedHistogramSeries);
             realHistogramPlotModel.InvalidatePlot(true);
 
-            firstSignal.Signal = null;
-            secondSignal.Signal = null;
+            FirstChart.SignalRepresentation.Signal = null;
+            SecondChart.SignalRepresentation.Signal = null;
+        }
+
+        private void SavePlot(object param)
+        {
+            ISignal signal;
+
+            switch(param.ToString())
+            {
+                case "1":
+                    signal = FirstChart.SignalRepresentation.Signal;
+                    break;
+                case "2":
+                    signal = SecondChart.SignalRepresentation.Signal;
+                    break;
+                case "3":
+                    signal = combinedSignal.Signal;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                DefaultExt = "xD",
+                AddExtension = true
+            };
+            if (dlg.ShowDialog() == false) return;
+            using (BinaryWriter writer = new BinaryWriter(File.Open(dlg.FileName, FileMode.Create)))
+            {
+                foreach (Tuple<double, Complex> point in signal.Points)
+                {
+                    writer.Write(point.Item1);
+                    writer.Write(point.Item2.Real);
+                    writer.Write(point.Item2.Imaginary);
+                }
+            }
+        }
+
+        private bool CanSavePlot(object param)
+        {
+            ISignal signal;
+            switch(param.ToString())
+            {
+                case "1":
+                    signal = FirstChart.SignalRepresentation.Signal;
+                    break;
+                case "2":
+                    signal = SecondChart.SignalRepresentation.Signal;
+                    break;
+                case "3":
+                    signal = combinedSignal.Signal;
+                    break;
+                default:
+                    return false;
+            }
+            if (signal == null) return false;
+            return (signal.Points.Count != 0);
+        }
+
+        private bool CanClear()
+        {
+            if (RealPlotModel.Axes.Count != 0) return true;
+            if (ImaginaryPlotModel.Axes.Count != 0) return true;
+            if (RealHistogramPlotModel.Axes.Count != 0) return true;
+            return false;
+        }
+
+        private void LoadPlot(object param)
+        {
+            SignalRepresentation signalRepresentation;
+
+            switch(param.ToString())
+            {
+                case "1":
+                    signalRepresentation = FirstChart.SignalRepresentation;
+                    FirstChart.SelectedIndex = -1;
+                    break;
+                case "2":
+                    signalRepresentation = SecondChart.SignalRepresentation;
+                    SecondChart.SelectedIndex = -1;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "*All Files | *.xD"
+            };
+            if (dlg.ShowDialog() == false) return;
+            using (BinaryReader reader = new BinaryReader(File.Open(dlg.FileName, FileMode.Open)))
+            {
+                SignalImplementation signalImplementation = new SignalImplementation
+                {
+                    Points = new List<Tuple<double, Complex>>()
+                };
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {
+                    double xCoordinate = reader.ReadDouble();
+                    Complex value = new Complex
+                    {
+                        Real = reader.ReadDouble(),
+                        Imaginary = reader.ReadDouble()
+                    };
+                    signalImplementation.Points.Add(new Tuple<double, Complex>(xCoordinate, value));
+                }
+
+                signalImplementation.StartingMoment = signalImplementation.Points[0].Item1;
+                signalImplementation.EndingMoment = signalImplementation.Points[signalImplementation.Points.Count - 1].Item1;
+                signalImplementation.CalculateTraits();
+                signalRepresentation.Signal = signalImplementation;
+            }
         }
 
         protected void OnPropertyChanged(string name)
