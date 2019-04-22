@@ -140,7 +140,7 @@ namespace CPSProject.Controller
             }
         }
 
-        public SignalTextProperties TextProperties3
+        public SignalTextProperties CombinedTextProperties
         {
             get
             {
@@ -149,7 +149,7 @@ namespace CPSProject.Controller
             set
             {
                 combinedTextProperties = value;
-                OnPropertyChanged("TextProperties3");
+                OnPropertyChanged("CombinedTextProperties");
             }
         }
 
@@ -319,7 +319,7 @@ namespace CPSProject.Controller
             };
             combinedSignal.Signal.Points = new List<Tuple<double, Complex>>();   
            
-            TextProperties3 = new SignalTextProperties();
+            CombinedTextProperties = new SignalTextProperties();
             
             realCombinedSeries = new ScatterSeries();
             imaginaryCombinedSeries = new ScatterSeries();
