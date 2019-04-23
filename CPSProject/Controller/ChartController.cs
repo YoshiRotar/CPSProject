@@ -475,19 +475,19 @@ namespace CPSProject.Controller
 
             foreach (Tuple<double, Complex> tuple in quantizedSignal.Points)
             {
-                realSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
-                imaginarySeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+                realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
 
-            realSeries.MarkerType = MarkerType.Circle;
-            imaginarySeries.MarkerType = MarkerType.Circle;
-            realSeries.MarkerSize = 2;
-            imaginarySeries.MarkerSize = 2;
-            realSeries.MarkerFill = OxyColors.Green;
-            imaginarySeries.MarkerFill = OxyColors.Green;
+            realCombinedSeries.MarkerType = MarkerType.Circle;
+            imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
+            realCombinedSeries.MarkerSize = 2;
+            imaginaryCombinedSeries.MarkerSize = 2;
+            realCombinedSeries.MarkerFill = OxyColors.Green;
+            imaginaryCombinedSeries.MarkerFill = OxyColors.Green;
 
-            realPlotModel.Series.Add(realSeries);
-            imaginaryPlotModel.Series.Add(imaginarySeries);
+            realPlotModel.Series.Add(realCombinedSeries);
+            imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
 
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
@@ -508,7 +508,8 @@ namespace CPSProject.Controller
             switch (param.ToString())
             {
                 case "1":
-                    signal = FirstChart.SignalRepresentation.Signal;
+                    if (combinedSignal.Signal.Points.Count != 0) signal = combinedSignal.Signal;
+                    else signal = FirstChart.SignalRepresentation.Signal;
                     break;
                 default:
                     throw new ArgumentException();
