@@ -28,6 +28,7 @@ namespace CPSProject.Controller
         private ICommand clearCommand;
         private ICommand quantizeCommand;
         private ICommand reconstructCommand;
+        private ICommand compareCommand;
         private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
@@ -256,6 +257,20 @@ namespace CPSProject.Controller
                         param => SignalExists(param));
                 }
                 return reconstructCommand;
+            }
+        }
+
+        public ICommand CompareCommand
+        {
+            get
+            {
+                if(compareCommand == null)
+                {
+                    compareCommand = new RelayCommand(
+                        param => CompareSignals(),
+                        param => CanMakeOpperation());
+                }
+                return compareCommand;
             }
         }
 
@@ -534,6 +549,12 @@ namespace CPSProject.Controller
 
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
+        }
+
+        private void CompareSignals()
+        {
+            double error = Quantizator.CalculatePeekSignalToNoiseRatio(FirstChart.SignalRepresentation.Signal, SecondChart.SignalRepresentation.Signal);
+            MessageBoxResult messageBox = MessageBox.Show("PSNR: " + error, "Wynik", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private bool CanMakeOpperation()
