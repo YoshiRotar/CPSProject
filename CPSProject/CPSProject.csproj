@@ -71,6 +71,9 @@
     <Compile Include="QuantizeWindow.xaml.cs">
       <DependentUpon>QuantizeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReconstructWindow.xaml.cs">
+      <DependentUpon>ReconstructWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +105,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="QuantizeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReconstructWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

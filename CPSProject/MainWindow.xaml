@@ -566,6 +566,7 @@
         <Button Content="Odejmij" Command="{Binding Path=SubtractCommand}" HorizontalAlignment="Left" Margin="982,61,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Wymnóż" Command="{Binding Path=MultiplyCommand}" HorizontalAlignment="Left" Margin="982,86,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="Podziel" Command="{Binding Path=DivideCommand}" HorizontalAlignment="Left" Margin="982,111,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Content="Kwantyzuj" Command="{Binding Path=QuantizeCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="47,290,0,0" VerticalAlignment="Top" Width="264" />
+        <Button Content="Kwantyzuj" Command="{Binding Path=QuantizeCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="47,290,0,0" VerticalAlignment="Top" Width="127" />
+        <Button Content="Odtwórz" Command="{Binding Path=ReconstructCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="184,290,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="-0.867,-0.1"/>
     </Grid>
 </Window>

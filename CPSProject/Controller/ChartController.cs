@@ -27,6 +27,7 @@ namespace CPSProject.Controller
         private ICommand divideCommand;
         private ICommand clearCommand;
         private ICommand quantizeCommand;
+        private ICommand reconstructCommand;
         private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
@@ -238,9 +239,23 @@ namespace CPSProject.Controller
                 {
                     quantizeCommand = new RelayCommand(
                         param => Quantize(param),
-                        param => CanQuantize(param));
+                        param => SignalExists(param));
                 }
                 return quantizeCommand;
+            }
+        }
+
+        public ICommand ReconstructCommand
+        {
+            get
+            {
+                if (reconstructCommand == null)
+                {
+                    reconstructCommand = new RelayCommand(
+                        param => Reconstruct(param),
+                        param => SignalExists(param));
+                }
+                return reconstructCommand;
             }
         }
 
@@ -391,7 +406,7 @@ namespace CPSProject.Controller
             realHistogramPlotModel.InvalidatePlot(true);
         }
 
-        private bool CanQuantize(object param)
+        private bool SignalExists(object param)
         {
             switch (param.ToString())
             {
@@ -455,6 +470,64 @@ namespace CPSProject.Controller
             imaginarySeries.MarkerSize = 2;
             realSeries.MarkerFill = OxyColors.Green;
             imaginarySeries.MarkerFill = OxyColors.Green;
+
+            realPlotModel.Series.Add(realSeries);
+            imaginaryPlotModel.Series.Add(imaginarySeries);
+
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
+        }
+
+        private void Reconstruct(object param)
+        {
+            string frequencyToReconstructText = "";
+            ReconstructWindow dialog = new ReconstructWindow();
+            if (dialog.ShowDialog() == true)
+            {
+                frequencyToReconstructText = dialog.FrequencyToReconstruct;
+            }
+
+            if (!double.TryParse(frequencyToReconstructText, out double frequencyToReconstruct)) return;
+
+            ISignal signal;
+            switch (param.ToString())
+            {
+                case "1":
+                    signal = FirstChart.SignalRepresentation.Signal;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            SignalImplementation reconstructedSignal = Quantizator.ExtrapolationZeroOrderHold(signal, frequencyToReconstruct);
+
+            reconstructedSignal.StartingMoment = reconstructedSignal.Points[0].Item1;
+            reconstructedSignal.EndingMoment = reconstructedSignal.Points[reconstructedSignal.Points.Count - 1].Item1;
+            reconstructedSignal.CalculateTraits();
+            combinedSignal.Signal = reconstructedSignal;
+
+            combinedTextProperties.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
+            combinedTextProperties.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
+            combinedTextProperties.AveragePowerText = combinedSignal.Signal.AveragePower.ToString("N3");
+            combinedTextProperties.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
+            combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
+            OnPropertyChanged("CombinedTextProperties");
+
+            ScatterSeries realSeries = new ScatterSeries();
+            ScatterSeries imaginarySeries = new ScatterSeries();
+
+            foreach (Tuple<double, Complex> tuple in reconstructedSignal.Points)
+            {
+                realSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginarySeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+            }
+
+            realSeries.MarkerType = MarkerType.Circle;
+            imaginarySeries.MarkerType = MarkerType.Circle;
+            realSeries.MarkerSize = 1;
+            imaginarySeries.MarkerSize = 1;
+            realSeries.MarkerFill = OxyColors.Black;
+            imaginarySeries.MarkerFill = OxyColors.Black;
 
             realPlotModel.Series.Add(realSeries);
             imaginaryPlotModel.Series.Add(imaginarySeries);

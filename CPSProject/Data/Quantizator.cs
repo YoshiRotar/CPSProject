@@ -44,7 +44,7 @@ namespace CPSProject.Data
         {
             double realMinimum = signalToQuantize.Points.Select(x => x.Item2.Real).Min();
             double realMaximum = signalToQuantize.Points.Select(x => x.Item2.Real).Max();
-            double realStep = (realMaximum - realMinimum) / levelsOfQuantization;
+            double realStep = (realMaximum - realMinimum) / (levelsOfQuantization - 1);
 
             double imaginaryMinimum = signalToQuantize.Points.Select(x => x.Item2.Imaginary).Min();
             double imaginaryMaximum = signalToQuantize.Points.Select(x => x.Item2.Imaginary).Max();
@@ -54,13 +54,30 @@ namespace CPSProject.Data
             {
                 double realPointValue = realMaximum;
                 double imaginaryPointValue = imaginaryMaximum;
-                while (realPointValue - 0.001 > point.Item2.Real) realPointValue -= realStep;
-                while (imaginaryPointValue - 0.001 > point.Item2.Imaginary) imaginaryPointValue -= imaginaryStep;
+                while (realPointValue > point.Item2.Real) realPointValue -= realStep;
+                while (imaginaryPointValue > point.Item2.Imaginary) imaginaryPointValue -= imaginaryStep;
                 point.Item2.Real = realPointValue;
                 point.Item2.Imaginary = imaginaryPointValue;
             }
 
             return (SignalImplementation)signalToQuantize;
+        }
+
+        public static SignalImplementation ExtrapolationZeroOrderHold(ISignal signalToReconstruct, double targetFrequency)
+        {
+            SignalImplementation reconstructedSignal = new SignalImplementation();
+            double step = 1 / targetFrequency;
+            if (signalToReconstruct.Points.Count < 2) throw new ArgumentException();
+            double baseSignalStep = signalToReconstruct.Points.ElementAtOrDefault(1).Item1 - signalToReconstruct.Points.ElementAtOrDefault(0).Item1;
+            Tuple<double, Complex> referencePoint = signalToReconstruct.Points.First();
+            foreach(Tuple<double, Complex> point in signalToReconstruct.Points)
+            {
+                for(double d=point.Item1; d<point.Item1+baseSignalStep; d+=step)
+                {
+                    reconstructedSignal.Points.Add(new Tuple<double, Complex>(d, point.Item2));
+                }
+            }
+            return reconstructedSignal;
         }
     }
 }
