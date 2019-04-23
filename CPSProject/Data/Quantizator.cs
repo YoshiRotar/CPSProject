@@ -79,5 +79,23 @@ namespace CPSProject.Data
             }
             return reconstructedSignal;
         }
+
+        public static double CalculateMeanSqueredError(ISignal signalToCompare, ISignal comparedSignal)
+        {
+            double MSE = 0;
+            for(int i=0; i<signalToCompare.Points.Count; i++)
+            {
+                if(signalToCompare.Points.ElementAt(i).Item1 == signalToCompare.Points.ElementAt(i).Item1)
+                    MSE += Math.Pow(signalToCompare.Points.ElementAt(i).Item2.Real - comparedSignal.Points.ElementAt(i).Item2.Real, 2);
+            }
+            return MSE;
+        }
+
+        public static double CalculatePeekSignalToNoiseRatio(ISignal signalToCompare, ISignal comparedSignal)
+        {
+            double peekSquared = Math.Pow(signalToCompare.Points.Max(x => x.Item2.Real), 2);
+            double MSE = CalculateMeanSqueredError(signalToCompare, comparedSignal);
+            return 10 * Math.Log10(peekSquared / MSE);
+        }
     }
 }
