@@ -470,8 +470,8 @@ namespace CPSProject.Controller
             combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
             OnPropertyChanged("CombinedTextProperties");
 
-            ScatterSeries realSeries = new ScatterSeries();
-            ScatterSeries imaginarySeries = new ScatterSeries();
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
 
             foreach (Tuple<double, Complex> tuple in quantizedSignal.Points)
             {
@@ -529,8 +529,8 @@ namespace CPSProject.Controller
             combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
             OnPropertyChanged("CombinedTextProperties");
 
-            ScatterSeries realCombinedSeries = new ScatterSeries();
-            ScatterSeries imaginaryCombinedSeries = new ScatterSeries();
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
 
             foreach (Tuple<double, Complex> tuple in reconstructedSignal.Points)
             {

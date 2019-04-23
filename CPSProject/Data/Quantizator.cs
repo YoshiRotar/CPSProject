@@ -54,8 +54,8 @@ namespace CPSProject.Data
             {
                 double realPointValue = realMaximum;
                 double imaginaryPointValue = imaginaryMaximum;
-                while (realPointValue > point.Item2.Real) realPointValue -= realStep;
-                while (imaginaryPointValue > point.Item2.Imaginary) imaginaryPointValue -= imaginaryStep;
+                while (realPointValue > point.Item2.Real && realPointValue - realStep >= realMinimum) realPointValue -= realStep;
+                while (imaginaryPointValue > point.Item2.Imaginary && imaginaryPointValue - imaginaryStep >= imaginaryMinimum) imaginaryPointValue -= imaginaryStep;
                 point.Item2.Real = realPointValue;
                 point.Item2.Imaginary = imaginaryPointValue;
             }
