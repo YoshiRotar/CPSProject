@@ -268,7 +268,7 @@ namespace CPSProject.Controller
                 {
                     compareCommand = new RelayCommand(
                         param => CompareSignals(),
-                        param => CanMakeOpperation());
+                        param => CanCompare());
                 }
                 return compareCommand;
             }
@@ -529,24 +529,24 @@ namespace CPSProject.Controller
             combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
             OnPropertyChanged("CombinedTextProperties");
 
-            ScatterSeries realSeries = new ScatterSeries();
-            ScatterSeries imaginarySeries = new ScatterSeries();
+            ScatterSeries realCombinedSeries = new ScatterSeries();
+            ScatterSeries imaginaryCombinedSeries = new ScatterSeries();
 
             foreach (Tuple<double, Complex> tuple in reconstructedSignal.Points)
             {
-                realSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
-                imaginarySeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+                realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
 
-            realSeries.MarkerType = MarkerType.Circle;
-            imaginarySeries.MarkerType = MarkerType.Circle;
-            realSeries.MarkerSize = 1;
-            imaginarySeries.MarkerSize = 1;
-            realSeries.MarkerFill = OxyColors.Black;
-            imaginarySeries.MarkerFill = OxyColors.Black;
+            realCombinedSeries.MarkerType = MarkerType.Circle;
+            imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
+            realCombinedSeries.MarkerSize = 1;
+            imaginaryCombinedSeries.MarkerSize = 1;
+            realCombinedSeries.MarkerFill = OxyColors.Black;
+            imaginaryCombinedSeries.MarkerFill = OxyColors.Black;
 
-            realPlotModel.Series.Add(realSeries);
-            imaginaryPlotModel.Series.Add(imaginarySeries);
+            realPlotModel.Series.Add(realCombinedSeries);
+            imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
 
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
@@ -554,7 +554,10 @@ namespace CPSProject.Controller
 
         private void CompareSignals()
         {
-            double error = Quantizator.CalculatePeekSignalToNoiseRatio(FirstChart.SignalRepresentation.Signal, SecondChart.SignalRepresentation.Signal);
+            ISignal firstSignal = FirstChart.SignalRepresentation.Signal;
+            ISignal secondSignal = SecondChart.SignalRepresentation.Signal;
+            if (secondSignal == null || secondSignal.Points.Count == 0) secondSignal = combinedSignal.Signal;
+            double error = Quantizator.CalculatePeekSignalToNoiseRatio(firstSignal, secondSignal);
             MessageBoxResult messageBox = MessageBox.Show("PSNR: " + error, "Wynik", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -562,6 +565,16 @@ namespace CPSProject.Controller
         {
             if (FirstChart.SignalRepresentation.Signal != null && SecondChart.SignalRepresentation.Signal != null) return true;
             return false;
+        }
+
+        private bool CanCompare()
+        {
+            if (firstChart.SignalRepresentation.Signal == null || firstChart.SignalRepresentation.Signal.Points.Count == 0) return false;
+            if (SecondChart.SignalRepresentation.Signal == null || SecondChart.SignalRepresentation.Signal.Points.Count == 0)
+            {
+                if (combinedSignal.Signal == null || combinedSignal.Signal.Points.Count == 0) return false;
+            }
+            return true;
         }
 
         private void ClearPlot()
