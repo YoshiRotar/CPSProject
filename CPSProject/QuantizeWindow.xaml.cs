@@ -17,11 +17,26 @@ namespace CPSProject
     /// <summary>
     /// Interaction logic for QuentizeWindow.xaml
     /// </summary>
-    public partial class QuentizeWindow : Window
+    public partial class QuantizeWindow : Window
     {
-        public QuentizeWindow()
+        public string SamplingFrequency
+        {
+            get { return Sampling.Text; }
+        }
+
+        public string LevelsOfQuantization
+        {
+            get { return Levels.Text; }
+        }
+
+        public QuantizeWindow()
         {
             InitializeComponent();
+        }
+
+        private void OkButton(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

@@ -27,7 +27,6 @@ namespace CPSProject.Controller
         private ICommand divideCommand;
         private ICommand clearCommand;
         private ICommand quantizeCommand;
-        private ICommand openQuantizeWindow;
         private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
@@ -39,41 +38,10 @@ namespace CPSProject.Controller
         private ColumnSeries realHistogramSeries;
         private ColumnSeries realCombinedHistogramSeries;
         private SignalTextProperties combinedTextProperties;
-        private string samplingFrequencyText;
-        private string numberOfQuantizationLevelsText;
-        public int numberOfQuantizationLevels;
-        public double samplingFrequency;
 
         public event PropertyChangedEventHandler PropertyChanged;
         
         public int NumberOfIntervals { get; set; }
-        
-
-        public string SamplingFrequencyText
-        {
-            get
-            {
-                return samplingFrequencyText;
-            }
-            set
-            {
-                samplingFrequencyText = value;
-                OnPropertyChanged("SamplingFrequencyText");
-            }
-        }
-
-        public string NumberOfQuantizationLevelsText
-        {
-            get
-            {
-                return numberOfQuantizationLevelsText;
-            }
-            set
-            {
-                numberOfQuantizationLevelsText = value;
-                OnPropertyChanged("NumberOfQuantizationLevels");
-            }
-        }
 
         public PlotModel RealPlotModel
         {
@@ -266,27 +234,13 @@ namespace CPSProject.Controller
         {
             get
             {
-                if(quantizeCommand == null)
+                if (quantizeCommand == null)
                 {
                     quantizeCommand = new RelayCommand(
                         param => Quantize(param),
-                        param => CanQuantize());
+                        param => CanQuantize(param));
                 }
                 return quantizeCommand;
-            }
-        }
-
-        public ICommand OpenQuantizeWindow
-        {
-            get
-            {
-                if (openQuantizeWindow == null)
-                {
-                    openQuantizeWindow = new RelayCommand(
-                        param => OpenNewWindow(param),
-                        param => CanOpenQuantize(param));
-                }
-                return openQuantizeWindow;
             }
         }
 
@@ -437,7 +391,7 @@ namespace CPSProject.Controller
             realHistogramPlotModel.InvalidatePlot(true);
         }
 
-        private bool CanOpenQuantize(object param)
+        private bool CanQuantize(object param)
         {
             switch (param.ToString())
             {
@@ -448,32 +402,65 @@ namespace CPSProject.Controller
             }
         }
 
-        private void OpenNewWindow(object param)
-        {
-            Window quantizeWindow = new QuentizeWindow
-            {
-                Tag = param
-            };
-            quantizeWindow.ShowDialog();
-        }
-
-        private bool CanQuantize()
-        {
-            if (!double.TryParse(SamplingFrequencyText, out samplingFrequency)) return false;
-            if (!int.TryParse(NumberOfQuantizationLevelsText, out numberOfQuantizationLevels)) return false;
-            return true;
-        }
-
         private void Quantize(object param)
         {
-            switch(param.ToString())
+            string samplingText = "";
+            string levelsText = "";
+            QuantizeWindow dialog = new QuantizeWindow();
+            if (dialog.ShowDialog() == true)
+            {
+                samplingText = dialog.SamplingFrequency;
+                levelsText = dialog.LevelsOfQuantization;
+            }
+
+            if (!double.TryParse(samplingText, out double samplingFrequency)) return;
+            if (!int.TryParse(levelsText, out int levelsOfQuantization)) return;
+
+            ISignal signal;
+            switch (param.ToString())
             {
                 case "1":
-
+                    signal = FirstChart.SignalRepresentation.Signal;
                     break;
                 default:
                     throw new ArgumentException();
             }
+
+            SignalImplementation quantizedSignal = Quantizator.Quantize(Quantizator.SampleSignal(signal, samplingFrequency), levelsOfQuantization);
+
+            quantizedSignal.StartingMoment = quantizedSignal.Points[0].Item1;
+            quantizedSignal.EndingMoment = quantizedSignal.Points[quantizedSignal.Points.Count - 1].Item1;
+            quantizedSignal.CalculateTraits();
+            combinedSignal.Signal = quantizedSignal;
+
+            combinedTextProperties.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
+            combinedTextProperties.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
+            combinedTextProperties.AveragePowerText = combinedSignal.Signal.AveragePower.ToString("N3");
+            combinedTextProperties.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
+            combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
+            OnPropertyChanged("CombinedTextProperties");
+
+            ScatterSeries realSeries = new ScatterSeries();
+            ScatterSeries imaginarySeries = new ScatterSeries();
+
+            foreach (Tuple<double, Complex> tuple in quantizedSignal.Points)
+            {
+                realSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginarySeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+            }
+
+            realSeries.MarkerType = MarkerType.Circle;
+            imaginarySeries.MarkerType = MarkerType.Circle;
+            realSeries.MarkerSize = 2;
+            imaginarySeries.MarkerSize = 2;
+            realSeries.MarkerFill = OxyColors.Green;
+            imaginarySeries.MarkerFill = OxyColors.Green;
+
+            realPlotModel.Series.Add(realSeries);
+            imaginaryPlotModel.Series.Add(imaginarySeries);
+
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
         }
 
         private bool CanMakeOpperation()
@@ -560,7 +547,7 @@ namespace CPSProject.Controller
             textTraits.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
             textTraits.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
 
-            OnPropertyChanged("TextProperties3");
+            OnPropertyChanged("CombinedTextProperties");
 
             realPlotModel.Series.Add(realCombinedSeries);
             imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);

@@ -37,9 +37,30 @@ namespace CPSProject.Data
                     }
                 }
             }
-
             return result;
+        }
 
+        public static SignalImplementation Quantize(ISignal signalToQuantize, double levelsOfQuantization)
+        {
+            double realMinimum = signalToQuantize.Points.Select(x => x.Item2.Real).Min();
+            double realMaximum = signalToQuantize.Points.Select(x => x.Item2.Real).Max();
+            double realStep = (realMaximum - realMinimum) / levelsOfQuantization;
+
+            double imaginaryMinimum = signalToQuantize.Points.Select(x => x.Item2.Imaginary).Min();
+            double imaginaryMaximum = signalToQuantize.Points.Select(x => x.Item2.Imaginary).Max();
+            double imaginaryStep = (realMaximum - realMinimum) / levelsOfQuantization;
+
+            foreach(Tuple<double,Complex> point in signalToQuantize.Points)
+            {
+                double realPointValue = realMaximum;
+                double imaginaryPointValue = imaginaryMaximum;
+                while (realPointValue - 0.001 > point.Item2.Real) realPointValue -= realStep;
+                while (imaginaryPointValue - 0.001 > point.Item2.Imaginary) imaginaryPointValue -= imaginaryStep;
+                point.Item2.Real = realPointValue;
+                point.Item2.Imaginary = imaginaryPointValue;
+            }
+
+            return (SignalImplementation)signalToQuantize;
         }
     }
 }

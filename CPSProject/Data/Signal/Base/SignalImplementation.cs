@@ -19,6 +19,11 @@ namespace CPSProject.Data.Signal.Base
         public double EffectiveValue { get; set; }
         public List<Tuple<double, Complex>> Points { get; set; }
 
+        public SignalImplementation()
+        {
+            Points = new List<Tuple<double, Complex>>();
+        }
+
         public virtual Complex GenerateSignal(double t)
         {
             throw new NotImplementedException();
