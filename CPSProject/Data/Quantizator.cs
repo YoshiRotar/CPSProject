@@ -84,13 +84,19 @@ namespace CPSProject.Data
         {
             double MSE = 0;
             int numberOfElements = 0;
-            for(int i=0; i<signalToCompare.Points.Count; i++)
+            for(int i=0, j=0; i<signalToCompare.Points.Count && j<comparedSignal.Points.Count;)
             {
-                if(signalToCompare.Points.ElementAt(i).Item1 == signalToCompare.Points.ElementAt(i).Item1)
+                double xDifference = signalToCompare.Points.ElementAt(i).Item1 - comparedSignal.Points.ElementAt(j).Item1;
+                if (Math.Abs(xDifference) < 0.001)
                 {
-                    MSE += Math.Pow(signalToCompare.Points.ElementAt(i).Item2.Real - comparedSignal.Points.ElementAt(i).Item2.Real, 2);
+                    double difference = signalToCompare.Points.ElementAt(i).Item2.Real - comparedSignal.Points.ElementAt(j).Item2.Real;
+                    MSE += difference * difference;
                     numberOfElements++;
+                    i++;
+                    j++;
                 }
+                else if (xDifference < 0) i++;
+                else j++;
                     
             }
             return MSE / numberOfElements;
