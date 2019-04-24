@@ -83,12 +83,17 @@ namespace CPSProject.Data
         public static double CalculateMeanSqueredError(ISignal signalToCompare, ISignal comparedSignal)
         {
             double MSE = 0;
+            int numberOfElements = 0;
             for(int i=0; i<signalToCompare.Points.Count; i++)
             {
                 if(signalToCompare.Points.ElementAt(i).Item1 == signalToCompare.Points.ElementAt(i).Item1)
+                {
                     MSE += Math.Pow(signalToCompare.Points.ElementAt(i).Item2.Real - comparedSignal.Points.ElementAt(i).Item2.Real, 2);
+                    numberOfElements++;
+                }
+                    
             }
-            return MSE;
+            return MSE / numberOfElements;
         }
 
         public static double CalculatePeekSignalToNoiseRatio(ISignal signalToCompare, ISignal comparedSignal)
