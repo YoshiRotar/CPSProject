@@ -569,5 +569,7 @@
         <Button Content="Kwantyzuj" Command="{Binding Path=QuantizeCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="47,290,0,0" VerticalAlignment="Top" Width="127" />
         <Button Content="Odtwórz" Command="{Binding Path=ReconstructCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="184,290,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="-0.867,-0.1"/>
         <Button Content="Porównaj" Command="{Binding Path=CompareCommand}" HorizontalAlignment="Left" Margin="982,136,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.307,0.25"/>
+        <Button Content="Splot" Command="{Binding Path=ConvoluteCommand}" HorizontalAlignment="Left" Margin="982,160,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Korelacja" Command="{Binding Path=CorrelateCommand}" HorizontalAlignment="Left" Margin="982,184,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

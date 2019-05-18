@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPSProject.Data.Signal.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,18 +41,27 @@ namespace CPSProject.Data
             Complex result = new Complex();
             result = Multiply(a, b);
             double divisor = b.Real * b.Real + b.Imaginary * b.Imaginary;
-            if(divisor >= 0.001 || divisor <= -0.001)
+            if (divisor >= 0.001 || divisor <= -0.001)
             {
                 result.Real /= divisor;
                 result.Imaginary /= divisor;
             }
             else
             {
-                result.Real = 0;
-                result.Imaginary = 0;
+                result.Real /= 0.001;
+                result.Imaginary /= 0.001;
             }
             return result;
         }
 
+        public static Complex GetZero()
+        {
+            Complex result = new Complex
+            {
+                Real = 0,
+                Imaginary = 0
+            };
+            return result;
+        }
     }
 }

@@ -68,6 +68,7 @@
     </ApplicationDefinition>
     <Compile Include="Controller\ChartRepresentation.cs" />
     <Compile Include="Data\Quantizator.cs" />
+    <Compile Include="Data\Signal\SignalOperations.cs" />
     <Compile Include="QuantizeWindow.xaml.cs">
       <DependentUpon>QuantizeWindow.xaml</DependentUpon>
     </Compile>

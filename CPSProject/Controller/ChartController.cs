@@ -29,6 +29,8 @@ namespace CPSProject.Controller
         private ICommand quantizeCommand;
         private ICommand reconstructCommand;
         private ICommand compareCommand;
+        private ICommand convoluteCommand;
+        private ICommand correlateCommand;
         private SignalRepresentation combinedSignal;
         private PlotModel realPlotModel;
         private PlotModel imaginaryPlotModel;
@@ -186,12 +188,13 @@ namespace CPSProject.Controller
                 if (addCommand == null)
                 {
                     addCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Add, combinedTextProperties),
+                        param => CombineSignals(SignalOperations.AddSignals, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return addCommand;
             }
         }
+
         public ICommand SubtractCommand
         {
             get
@@ -199,12 +202,13 @@ namespace CPSProject.Controller
                 if (subtractCommand == null)
                 {
                     subtractCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Subtract, combinedTextProperties),
+                        param => CombineSignals(SignalOperations.SubtractSignals, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return subtractCommand;
             }
         }
+
         public ICommand MultiplyCommand
         {
             get
@@ -212,12 +216,13 @@ namespace CPSProject.Controller
                 if (multiplyCommand == null)
                 {
                     multiplyCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Multiply, combinedTextProperties),
+                        param => CombineSignals(SignalOperations.MultiplySignals, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return multiplyCommand;
             }
         }
+
         public ICommand DivideCommand
         {
             get
@@ -225,10 +230,38 @@ namespace CPSProject.Controller
                 if (divideCommand == null)
                 {
                     divideCommand = new RelayCommand(
-                        param => CombineSignals(Complex.Divide, combinedTextProperties),
+                        param => CombineSignals(SignalOperations.DivideSignals, combinedTextProperties),
                         param => CanMakeOpperation());
                 }
                 return divideCommand;
+            }
+        }
+
+        public ICommand ConvoluteCommand
+        {
+            get
+            {
+                if (convoluteCommand == null)
+                {
+                    convoluteCommand = new RelayCommand(
+                        param => CombineSignals(SignalOperations.ConvoluteSignals, combinedTextProperties),
+                        param => CanMakeOpperation());
+                }
+                return convoluteCommand;
+            }
+        }
+
+        public ICommand CorrelateCommand
+        {
+            get
+            {
+                if (correlateCommand == null)
+                {
+                    correlateCommand = new RelayCommand(
+                        param => CombineSignals(SignalOperations.CorrelateSignals, combinedTextProperties),
+                        param => CanMakeOpperation());
+                }
+                return correlateCommand;
             }
         }
 
@@ -587,35 +620,9 @@ namespace CPSProject.Controller
             RealHistogramPlotModel.InvalidatePlot(true);
         }
 
-        private void CombineSignals(Func<Complex, Complex, Complex> func, SignalTextProperties textTraits)
+        private void CombineSignals(Func<ISignal, ISignal, SignalImplementation> func, SignalTextProperties textTraits)
         {
-            List<Tuple<double, Complex>> signal1 = FirstChart.SignalRepresentation.Signal.Points;
-            List<Tuple<double, Complex>> signal2 = SecondChart.SignalRepresentation.Signal.Points;
-            List<Tuple<double, Complex>> outputSignal = new List<Tuple<double, Complex>>();
-
-            int i = 0;
-            int j = 0;
-            Complex result;
-
-            while (i < signal1.Count && j < signal2.Count)
-            {
-                if (Math.Abs(signal1[i].Item1 - signal2[j].Item1) <= 0.001)
-                {
-                    result = func(signal1[i].Item2, signal2[j].Item2);
-                    outputSignal.Add(new Tuple<double, Complex>(signal1[i].Item1, result));
-                    i++;
-                    j++;
-                }
-                else if (signal1[i].Item1 - signal2[j].Item1 > 0.001 )
-                {
-                    j++;
-                }
-                else if (signal2[j].Item1 - signal1[i].Item1 > 0.001)
-                {
-                    i++;
-                }
-
-            }
+            SignalImplementation outputSignal = func(firstChart.SignalRepresentation.Signal, secondChart.SignalRepresentation.Signal);
 
             realPlotModel.Axes.Clear();
             imaginaryPlotModel.Axes.Clear();
@@ -630,24 +637,18 @@ namespace CPSProject.Controller
             realCombinedSeries.MarkerSize = 1;
             imaginaryCombinedSeries.MarkerSize = 1;
 
-            SignalImplementation signalImplementation = new SignalImplementation
-            {
-                Points = new List<Tuple<double, Complex>>()
-            };
-
-            foreach (Tuple<double, Complex> tuple in outputSignal)
+            foreach (Tuple<double, Complex> tuple in outputSignal.Points)
             {
                 realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
-                signalImplementation.Points.Add(tuple);
             }
 
             ClearPlot();
 
-            signalImplementation.StartingMoment = signalImplementation.Points[0].Item1;
-            signalImplementation.EndingMoment = signalImplementation.Points[signalImplementation.Points.Count-1].Item1;
-            signalImplementation.CalculateTraits();
-            combinedSignal.Signal = signalImplementation;
+            outputSignal.StartingMoment = outputSignal.Points[0].Item1;
+            outputSignal.EndingMoment = outputSignal.Points[outputSignal.Points.Count - 1].Item1;
+            outputSignal.CalculateTraits();
+            combinedSignal.Signal = outputSignal;
 
             textTraits.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
             textTraits.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
@@ -655,7 +656,7 @@ namespace CPSProject.Controller
             textTraits.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
             textTraits.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
 
-            OnPropertyChanged("CombinedTextProperties");
+            OnPropertyChanged("TextProperties3");
 
             realPlotModel.Series.Add(realCombinedSeries);
             imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
@@ -663,16 +664,16 @@ namespace CPSProject.Controller
             realPlotModel.InvalidatePlot(true);
             imaginaryPlotModel.InvalidatePlot(true);
 
-            double min = outputSignal.Min(d => d.Item2.Real);
-            double max = outputSignal.Max(d => d.Item2.Real);
+            double min = outputSignal.Points.Min(d => d.Item2.Real);
+            double max = outputSignal.Points.Max(d => d.Item2.Real);
             double universumWidth = max - min;
             double intervalWidth = universumWidth / NumberOfIntervals;
 
             int[] histogramUniversum = new int[NumberOfIntervals];
 
-            for (int k = 0; k < outputSignal.Count; k++)
+            for (int k = 0; k < outputSignal.Points.Count; k++)
             {
-                int interval = (int)Math.Floor((outputSignal[k].Item2.Real - min) / (intervalWidth + 0.0001));
+                int interval = (int)Math.Floor((outputSignal.Points[k].Item2.Real - min) / (intervalWidth + 0.0001));
                 histogramUniversum[interval]++;
             }
 
@@ -689,8 +690,8 @@ namespace CPSProject.Controller
             realHistogramPlotModel.Series.Add(realCombinedHistogramSeries);
             realHistogramPlotModel.InvalidatePlot(true);
 
-            FirstChart.SignalRepresentation.Signal = null;
-            SecondChart.SignalRepresentation.Signal = null;
+            firstChart.SignalRepresentation.Signal = null;
+            secondChart.SignalRepresentation.Signal = null;
         }
 
         private void SavePlot(object param)
