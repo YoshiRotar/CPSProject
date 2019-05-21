@@ -12,7 +12,6 @@ namespace CPSProject.Data
     {
         private double _cutoffFrequency;
         private int _filterDegree;
-        private double _kCoefficient;
         private IWindow _windowFunction;
 
         public LowPassFilter(double cutoffFrequency, int filterDegree, IWindow windowFunction)

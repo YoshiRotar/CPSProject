@@ -535,15 +535,18 @@ namespace CPSProject.Controller
         {
             string filterDegreeText = "";
             string cutoffFrequencyText = "";
+            IWindow windowFunction = null;
             FilterWindow dialog = new FilterWindow();
             if (dialog.ShowDialog() == true)
             {
                 filterDegreeText = dialog.FilterDegree;
                 cutoffFrequencyText = dialog.CutoffFrequency;
+                windowFunction = dialog.SelectedWindowFunction;
             }
 
             if (!int.TryParse(filterDegreeText, out int filterDegree)) return;
             if (!double.TryParse(cutoffFrequencyText, out double cutoffFrequency)) return;
+            if (windowFunction == null) return;
 
             ISignal signal;
             switch (param.ToString())
@@ -561,7 +564,7 @@ namespace CPSProject.Controller
                     throw new ArgumentException();
             }
 
-            LowPassFilter filterObject = new LowPassFilter(cutoffFrequency, filterDegree, new RectangleWindowFunction());
+            LowPassFilter filterObject = new LowPassFilter(cutoffFrequency, filterDegree, windowFunction);
             SignalImplementation filteredSignal = filterObject.Filter(signal);
 
             filteredSignal.StartingMoment = filteredSignal.Points[0].Item1;

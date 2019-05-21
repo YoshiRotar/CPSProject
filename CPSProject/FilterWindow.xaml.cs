@@ -22,6 +22,10 @@ namespace CPSProject
     /// </summary>
     public partial class FilterWindow : Window
     {
+        private ObservableCollection<IWindow> _windowFunctions = new ObservableCollection<IWindow>();
+
+        private IWindow _selectedWindow;
+
         public string CutoffFrequency
         {
             get { return cutoffFrequency.Text; }
@@ -31,9 +35,24 @@ namespace CPSProject
         {
             get { return filterDegree.Text; }
         }
+        
+        public ObservableCollection<IWindow> WindowFunctions
+        {
+            get { return _windowFunctions; }
+            set { _windowFunctions = value; }
+        }
+
+        public IWindow SelectedWindowFunction
+        {
+            get { return _selectedWindow; }
+            set { _selectedWindow = value; }
+        }
 
         public FilterWindow()
         {
+            DataContext = this;
+            WindowFunctions.Add(new RectangleWindowFunction());
+            WindowFunctions.Add(new HanningWindowFunction());
             InitializeComponent();
         }
 

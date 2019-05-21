@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data.WindowFunctions
 {
-    class RectangleWindowFunction : IWindow
+    class HanningWindowFunction : IWindow
     {
         public double getValue(int n, int filterDegree)
         {
-            int rectangleLimit = (filterDegree - 1) / 2;
-            if (n > rectangleLimit || n < -rectangleLimit) return 0;
-            else return 1;
+            return 0.5 - (0.5 * Math.Cos(2 * Math.PI * n / filterDegree));
         }
 
         public override string ToString()
         {
-            return "Prostokat";
+            return "Hanning";
         }
     }
 }

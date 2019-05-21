@@ -71,6 +71,7 @@
     <Compile Include="Data\Quantizator.cs" />
     <Compile Include="Data\WindowFunctions\IWindow.cs" />
     <Compile Include="Data\Signal\SignalOperations.cs" />
+    <Compile Include="Data\WindowFunctions\HanningWindowFunction.cs" />
     <Compile Include="Data\WindowFunctions\RectangleWindowFunction.cs" />
     <Compile Include="FilterWindow.xaml.cs">
       <DependentUpon>FilterWindow.xaml</DependentUpon>
