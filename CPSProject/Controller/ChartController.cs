@@ -1,4 +1,5 @@
 ﻿using CPSProject.Data;
+using CPSProject.Data.Filters;
 using CPSProject.Data.Signal;
 using CPSProject.Data.Signal.Base;
 using CPSProject.Data.WindowFunctions;
@@ -536,17 +537,20 @@ namespace CPSProject.Controller
             string filterDegreeText = "";
             string cutoffFrequencyText = "";
             IWindow windowFunction = null;
+            IFilter filter = null;
             FilterWindow dialog = new FilterWindow();
             if (dialog.ShowDialog() == true)
             {
                 filterDegreeText = dialog.FilterDegree;
                 cutoffFrequencyText = dialog.CutoffFrequency;
                 windowFunction = dialog.SelectedWindowFunction;
+                filter = dialog.SelectedFilter;
             }
 
             if (!int.TryParse(filterDegreeText, out int filterDegree)) return;
             if (!double.TryParse(cutoffFrequencyText, out double cutoffFrequency)) return;
             if (windowFunction == null) return;
+            if (filter == null) return;
 
             ISignal signal;
             switch (param.ToString())
@@ -564,8 +568,8 @@ namespace CPSProject.Controller
                     throw new ArgumentException();
             }
 
-            LowPassFilter filterObject = new LowPassFilter(cutoffFrequency, filterDegree, windowFunction);
-            SignalImplementation filteredSignal = filterObject.Filter(signal);
+            filter.InitFilter(cutoffFrequency, filterDegree, windowFunction);
+            SignalImplementation filteredSignal = filter.Filter(signal);
 
             filteredSignal.StartingMoment = filteredSignal.Points[0].Item1;
             filteredSignal.EndingMoment = filteredSignal.Points[filteredSignal.Points.Count - 1].Item1;

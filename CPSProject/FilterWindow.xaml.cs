@@ -1,4 +1,6 @@
-﻿using CPSProject.Data.Signal;
+﻿using CPSProject.Data;
+using CPSProject.Data.Filters;
+using CPSProject.Data.Signal;
 using CPSProject.Data.WindowFunctions;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,10 @@ namespace CPSProject
 
         private IWindow _selectedWindow;
 
+        private ObservableCollection<IFilter> _filters = new ObservableCollection<IFilter>();
+
+        private IFilter _selectedFilter;
+
         public string CutoffFrequency
         {
             get { return cutoffFrequency.Text; }
@@ -48,11 +54,25 @@ namespace CPSProject
             set { _selectedWindow = value; }
         }
 
+        public ObservableCollection<IFilter> Filters
+        {
+            get { return _filters; }
+            set { _filters = value; }
+        }
+
+        public IFilter SelectedFilter
+        {
+            get { return _selectedFilter; }
+            set { _selectedFilter = value; }
+        }
+
         public FilterWindow()
         {
             DataContext = this;
             WindowFunctions.Add(new RectangleWindowFunction());
             WindowFunctions.Add(new HanningWindowFunction());
+            Filters.Add(new LowPassFilter());
+            Filters.Add(new HighPassFilter());
             InitializeComponent();
         }
 

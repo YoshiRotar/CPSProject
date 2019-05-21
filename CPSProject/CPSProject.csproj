@@ -67,7 +67,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller\ChartRepresentation.cs" />
-    <Compile Include="Data\LowPassFilter.cs" />
+    <Compile Include="Data\Filters\IFilter.cs" />
+    <Compile Include="Data\Filters\HighPassFilter.cs" />
+    <Compile Include="Data\Filters\LowPassFilter.cs" />
     <Compile Include="Data\Quantizator.cs" />
     <Compile Include="Data\WindowFunctions\IWindow.cs" />
     <Compile Include="Data\Signal\SignalOperations.cs" />

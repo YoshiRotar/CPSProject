@@ -5,18 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CPSProject.Controller"
         mc:Ignorable="d"
-        Title="Filtrowanie" Height="200" Width="306"
+        Title="Filtrowanie" Height="250" Width="350"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <ComboBox ItemsSource="{Binding Path=WindowFunctions}" SelectedItem="{Binding Path=SelectedWindowFunction}" HorizontalAlignment="Left"   
                   Margin="182,78,0,0"   
                   VerticalAlignment="Top"   
-                  Width="90"/>
-        <Label Content="Rząd filtru:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                  Width="152"/>
+        <ComboBox ItemsSource="{Binding Path=Filters}" SelectedItem="{Binding Path=SelectedFilter}" HorizontalAlignment="Left"   
+                  Margin="182,11,0,0"   
+                  VerticalAlignment="Top"   
+                  Width="152"/>
+        <Label Content="Rząd filtru:" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top"/>
         <Label Content="Częstotliwość odcięcia:" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top"/>
         <Label Content="Funkcja okna:" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="182,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" Name="filterDegree"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="182,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="90" Name="cutoffFrequency"/>
-        <Button Content="Filtruj" HorizontalAlignment="Left" Margin="17,141,0,0" VerticalAlignment="Top" Width="259" Click="OkButton"/>
+        <Label Content="Rodzaj filtru:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="182,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="152" Name="filterDegree"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="182,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="152" Name="cutoffFrequency"/>
+        <Button Content="Filtruj" HorizontalAlignment="Left" Margin="17,175,0,0" VerticalAlignment="Top" Width="307" Click="OkButton"/>
     </Grid>
 </Window>
