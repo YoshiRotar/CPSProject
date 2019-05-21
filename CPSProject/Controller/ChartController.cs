@@ -1,6 +1,7 @@
 ﻿using CPSProject.Data;
 using CPSProject.Data.Signal;
 using CPSProject.Data.Signal.Base;
+using CPSProject.Data.WindowFunctions;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -27,6 +28,7 @@ namespace CPSProject.Controller
         private ICommand divideCommand;
         private ICommand clearCommand;
         private ICommand quantizeCommand;
+        private ICommand filterCommand;
         private ICommand reconstructCommand;
         private ICommand compareCommand;
         private ICommand convoluteCommand;
@@ -147,7 +149,7 @@ namespace CPSProject.Controller
                 {
                     saveCommand = new RelayCommand(
                         param => SavePlot(param),
-                        param => CanSavePlot(param));
+                        param => SignalExists(param));
                 }
                 return saveCommand;
             }
@@ -279,6 +281,20 @@ namespace CPSProject.Controller
             }
         }
 
+        public ICommand FilterCommand
+        {
+            get
+            {
+                if (filterCommand == null)
+                {
+                    filterCommand = new RelayCommand(
+                        param => Filter(param),
+                        param => SignalExists(param));
+                }
+                return filterCommand;
+            }
+        }
+
         public ICommand ReconstructCommand
         {
             get
@@ -370,7 +386,7 @@ namespace CPSProject.Controller
         {
             ChartRepresentation chart;
 
-            switch(param.ToString())
+            switch (param.ToString())
             {
                 case "1":
                     chart = FirstChart;
@@ -408,12 +424,12 @@ namespace CPSProject.Controller
 
             List<ScatterPoint> realUniversum = new List<ScatterPoint>();
             List<ScatterPoint> imaginaryUniversum = new List<ScatterPoint>();
-            foreach(Tuple<double, Complex> tuple in chart.SignalRepresentation.Signal.Points)
+            foreach (Tuple<double, Complex> tuple in chart.SignalRepresentation.Signal.Points)
             {
                 realUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryUniversum.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
-            
+
 
             chart.RealSeries = new ScatterSeries();
             chart.ImaginarySeries = new ScatterSeries();
@@ -452,17 +468,6 @@ namespace CPSProject.Controller
             realHistogramSeries.FillColor = chart.PlotColor;
             realHistogramPlotModel.Series.Add(realHistogramSeries);
             realHistogramPlotModel.InvalidatePlot(true);
-        }
-
-        private bool SignalExists(object param)
-        {
-            switch (param.ToString())
-            {
-                case "1":
-                    return FirstChart.SignalRepresentation.Signal != null;
-                default:
-                    return false;
-            }
         }
 
         private void Quantize(object param)
@@ -511,6 +516,76 @@ namespace CPSProject.Controller
                 realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
             }
+
+            realCombinedSeries.MarkerType = MarkerType.Circle;
+            imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
+            realCombinedSeries.MarkerSize = 2;
+            imaginaryCombinedSeries.MarkerSize = 2;
+            realCombinedSeries.MarkerFill = OxyColors.Green;
+            imaginaryCombinedSeries.MarkerFill = OxyColors.Green;
+
+            realPlotModel.Series.Add(realCombinedSeries);
+            imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
+
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
+        }
+
+        private void Filter(object param)
+        {
+            string filterDegreeText = "";
+            string cutoffFrequencyText = "";
+            FilterWindow dialog = new FilterWindow();
+            if (dialog.ShowDialog() == true)
+            {
+                filterDegreeText = dialog.FilterDegree;
+                cutoffFrequencyText = dialog.CutoffFrequency;
+            }
+
+            if (!int.TryParse(filterDegreeText, out int filterDegree)) return;
+            if (!double.TryParse(cutoffFrequencyText, out double cutoffFrequency)) return;
+
+            ISignal signal;
+            switch (param.ToString())
+            {
+                case "1":
+                    signal = FirstChart.SignalRepresentation.Signal;
+                    break;
+                case "2":
+                    signal = SecondChart.SignalRepresentation.Signal;
+                    break;
+                case "3":
+                    signal = combinedSignal.Signal;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            LowPassFilter filterObject = new LowPassFilter(cutoffFrequency, filterDegree, new RectangleWindowFunction());
+            SignalImplementation filteredSignal = filterObject.Filter(signal);
+
+            filteredSignal.StartingMoment = filteredSignal.Points[0].Item1;
+            filteredSignal.EndingMoment = filteredSignal.Points[filteredSignal.Points.Count - 1].Item1;
+            filteredSignal.CalculateTraits();
+            combinedSignal.Signal = filteredSignal;
+
+            combinedTextProperties.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
+            combinedTextProperties.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
+            combinedTextProperties.AveragePowerText = combinedSignal.Signal.AveragePower.ToString("N3");
+            combinedTextProperties.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
+            combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
+            OnPropertyChanged("CombinedTextProperties");
+
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
+
+            foreach (Tuple<double, Complex> tuple in filteredSignal.Points)
+            {
+                realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+            }
+
+            ClearPlot();
 
             realCombinedSeries.MarkerType = MarkerType.Circle;
             imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
@@ -730,7 +805,7 @@ namespace CPSProject.Controller
             }
         }
 
-        private bool CanSavePlot(object param)
+        private bool SignalExists(object param)
         {
             ISignal signal;
             switch(param.ToString())
