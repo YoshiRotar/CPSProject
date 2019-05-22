@@ -16,12 +16,16 @@ namespace CPSProject.Data
         public SignalImplementation Filter(ISignal signal)
         {
             SignalImplementation lowPassfilterCoefficients = _lowPassFilter.getFilterCoefficients(signal);
-            double samplingFrequency = 1d/(signal.Points[1].Item1 - signal.Points[0].Item1);
-            double d = signal.Points[signal.Points.Count - 1].Item1 - signal.Points[0].Item1;
-            SinusoidalSignal sinusoidal = new SinusoidalSignal(samplingFrequency, 1, 1d/samplingFrequency, 0, d);
+            //double samplingFrequency = 1d/(signal.Points[1].Item1 - signal.Points[0].Item1);
+            //double d = signal.Points[signal.Points.Count - 1].Item1 - signal.Points[0].Item1;
+            //SinusoidalSignal sinusoidal = new SinusoidalSignal(samplingFrequency, 1, 1d/samplingFrequency, 0, d);
             
-            SignalImplementation filterCoefficients = SignalOperations.MultiplySignals(lowPassfilterCoefficients, sinusoidal);
-            SignalImplementation result = SignalOperations.ConvoluteSignals(signal, filterCoefficients);
+            //SignalImplementation filterCoefficients = SignalOperations.MultiplySignals(lowPassfilterCoefficients, sinusoidal);
+            for(int i=0; i<lowPassfilterCoefficients.Points.Count; i++)
+            {
+                lowPassfilterCoefficients.Points[i].Item2.Real = lowPassfilterCoefficients.Points[i].Item2.Real * Math.Pow(-1.0, i);
+            }
+            SignalImplementation result = SignalOperations.ConvoluteSignals(signal, lowPassfilterCoefficients);
             return result;
         }
 
