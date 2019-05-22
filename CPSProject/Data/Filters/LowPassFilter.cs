@@ -17,9 +17,11 @@ namespace CPSProject.Data
 
         private double GetFilterCoeficcient(int n, double kCoefficient)
         {
-            if (n == (_filterDegree-1)/2) return 2d/ kCoefficient;
+            if (n == (_filterDegree - 1) / 2) return 2d / kCoefficient;
             int halfOfFilterDegree = (_filterDegree - 1) / 2;
-            double result = Math.Sin((2 * Math.PI * (n - halfOfFilterDegree)) / kCoefficient) / Math.PI * (n - halfOfFilterDegree);
+            double result = Math.Sin((2 * Math.PI * (n - halfOfFilterDegree)) / kCoefficient);
+            double denominator = Math.PI * (n - halfOfFilterDegree);
+            result = result / denominator;
             return result * _windowFunction.getValue(n, _filterDegree);
         }
 
@@ -29,11 +31,13 @@ namespace CPSProject.Data
             filterCoefficients.Points = new List<Tuple<double, Complex>>();
             double samplingFrequency = 1d/(signal.Points[1].Item1 - signal.Points[0].Item1);
             double kCoefficient = samplingFrequency / _cutoffFrequency;
-            for(int i=0; i<_filterDegree; i++)
+            int i = 0;
+            foreach (Tuple<double, Complex> point in signal.Points)
             {
                 Complex filterCoefficient = Complex.GetZero();
                 filterCoefficient.Real = GetFilterCoeficcient(i, kCoefficient);
-                filterCoefficients.Points.Add(new Tuple<double, Complex>(signal.Points[i].Item1, filterCoefficient));
+                filterCoefficients.Points.Add(new Tuple<double, Complex>(point.Item1, filterCoefficient));
+                i++;
             }
             return filterCoefficients;
         }

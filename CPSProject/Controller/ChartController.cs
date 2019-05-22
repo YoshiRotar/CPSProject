@@ -596,8 +596,8 @@ namespace CPSProject.Controller
 
             realCombinedSeries.MarkerType = MarkerType.Circle;
             imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
-            realCombinedSeries.MarkerSize = 2;
-            imaginaryCombinedSeries.MarkerSize = 2;
+            realCombinedSeries.MarkerSize = 1;
+            imaginaryCombinedSeries.MarkerSize = 1;
             realCombinedSeries.MarkerFill = OxyColors.Green;
             imaginaryCombinedSeries.MarkerFill = OxyColors.Green;
 
