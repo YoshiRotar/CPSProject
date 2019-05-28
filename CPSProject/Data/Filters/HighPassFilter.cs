@@ -9,34 +9,27 @@ using System.Threading.Tasks;
 
 namespace CPSProject.Data
 {
-    public class HighPassFilter : IFilter
+    public class HighPassFilter : Filter
     {
         private LowPassFilter _lowPassFilter = new LowPassFilter();
 
-        public SignalImplementation Filter(ISignal signal)
+        public override SignalImplementation FilterSignal(ISignal signal)
         {
-            SignalImplementation lowPassfilterCoefficients = _lowPassFilter.getFilterCoefficients(signal);
-            //double samplingFrequency = 1d/(signal.Points[1].Item1 - signal.Points[0].Item1);
-            //double d = signal.Points[signal.Points.Count - 1].Item1 - signal.Points[0].Item1;
-            //SinusoidalSignal sinusoidal = new SinusoidalSignal(samplingFrequency, 1, 1d/samplingFrequency, 0, d);
-            
-            //SignalImplementation filterCoefficients = SignalOperations.MultiplySignals(lowPassfilterCoefficients, sinusoidal);
-            for(int i=0; i<lowPassfilterCoefficients.Points.Count; i++)
+            double samplingFrequency = 1d / (signal.Points[1].Item1 - signal.Points[0].Item1);
+            double kCoefficient = samplingFrequency / (samplingFrequency/2 -_cutoffFrequency);
+            SignalImplementation filterCoefficients = getFilterCoefficients(signal, kCoefficient);
+           
+            for(int i=0; i<filterCoefficients.Points.Count; i++)
             {
-                lowPassfilterCoefficients.Points[i].Item2.Real = lowPassfilterCoefficients.Points[i].Item2.Real * Math.Pow(-1.0, i);
+                filterCoefficients.Points[i].Item2.Real = filterCoefficients.Points[i].Item2.Real * Math.Pow(-1.0, i);
             }
-            SignalImplementation result = SignalOperations.ConvoluteSignals(signal, lowPassfilterCoefficients);
+            SignalImplementation result = SignalOperations.ConvoluteSignals(signal, filterCoefficients);
             return result;
-        }
-
-        public void InitFilter(double cutoffFrequency, int filterDegree, IWindow windowFunction)
-        {
-            _lowPassFilter.InitFilter(cutoffFrequency, filterDegree, windowFunction);
         }
 
         public override string ToString()
         {
-            return "górnoprzepustoey";
+            return "górnoprzepustowy";
         }
     }
 }

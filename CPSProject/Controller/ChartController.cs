@@ -537,7 +537,7 @@ namespace CPSProject.Controller
             string filterDegreeText = "";
             string cutoffFrequencyText = "";
             IWindow windowFunction = null;
-            IFilter filter = null;
+            Filter filter = null;
             FilterWindow dialog = new FilterWindow();
             if (dialog.ShowDialog() == true)
             {
@@ -569,7 +569,7 @@ namespace CPSProject.Controller
             }
 
             filter.InitFilter(cutoffFrequency, filterDegree, windowFunction);
-            SignalImplementation filteredSignal = filter.Filter(signal);
+            SignalImplementation filteredSignal = filter.FilterSignal(signal);
 
             filteredSignal.StartingMoment = filteredSignal.Points[0].Item1;
             filteredSignal.EndingMoment = filteredSignal.Points[filteredSignal.Points.Count - 1].Item1;

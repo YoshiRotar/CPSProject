@@ -28,9 +28,9 @@ namespace CPSProject
 
         private IWindow _selectedWindow;
 
-        private ObservableCollection<IFilter> _filters = new ObservableCollection<IFilter>();
+        private ObservableCollection<Filter> _filters = new ObservableCollection<Filter>();
 
-        private IFilter _selectedFilter;
+        private Filter _selectedFilter;
 
         public string CutoffFrequency
         {
@@ -54,13 +54,13 @@ namespace CPSProject
             set { _selectedWindow = value; }
         }
 
-        public ObservableCollection<IFilter> Filters
+        public ObservableCollection<Filter> Filters
         {
             get { return _filters; }
             set { _filters = value; }
         }
 
-        public IFilter SelectedFilter
+        public Filter SelectedFilter
         {
             get { return _selectedFilter; }
             set { _selectedFilter = value; }
