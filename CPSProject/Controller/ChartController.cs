@@ -652,12 +652,14 @@ namespace CPSProject.Controller
                 default:
                     throw new ArgumentException();
             }
-
+            DateTime start = DateTime.Now;
             SignalImplementation transformedSignal = transform.TransformSignal(signal);
             if(absoluteValue)
             {
                 transformedSignal = SignalOperations.GetAbsoluteSignal(transformedSignal);
             }
+            TimeSpan elapsedTime = DateTime.Now - start;
+            MessageBox.Show("Czas wykonania algorytmu: " + elapsedTime.Seconds + "s");
 
 
             transformedSignal.StartingMoment = transformedSignal.Points[0].Item1;
