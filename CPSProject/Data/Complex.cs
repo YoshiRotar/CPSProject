@@ -63,5 +63,12 @@ namespace CPSProject.Data
             };
             return result;
         }
+
+        public Complex GetAbsouluteValue()
+        {
+            Complex result = Complex.GetZero();
+            result.Real = Math.Sqrt(Real * Real + Imaginary * Imaginary);
+            return result;
+        }
     }
 }

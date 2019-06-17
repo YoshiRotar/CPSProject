@@ -71,10 +71,15 @@
     <Compile Include="Data\Filters\HighPassFilter.cs" />
     <Compile Include="Data\Filters\LowPassFilter.cs" />
     <Compile Include="Data\Quantizator.cs" />
+    <Compile Include="Data\Transforms\DefinitionDFT.cs" />
+    <Compile Include="Data\Transforms\SignalTransform.cs" />
     <Compile Include="Data\WindowFunctions\IWindow.cs" />
     <Compile Include="Data\Signal\SignalOperations.cs" />
     <Compile Include="Data\WindowFunctions\HanningWindowFunction.cs" />
     <Compile Include="Data\WindowFunctions\RectangleWindowFunction.cs" />
+    <Compile Include="TransformWindow.xaml.cs">
+      <DependentUpon>TransformWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FilterWindow.xaml.cs">
       <DependentUpon>FilterWindow.xaml</DependentUpon>
     </Compile>
@@ -84,6 +89,10 @@
     <Compile Include="ReconstructWindow.xaml.cs">
       <DependentUpon>ReconstructWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="TransformWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

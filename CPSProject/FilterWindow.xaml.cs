@@ -19,9 +19,6 @@ using System.Windows.Shapes;
 
 namespace CPSProject
 {
-    /// <summary>
-    /// Interaction logic for QuentizeWindow.xaml
-    /// </summary>
     public partial class FilterWindow : Window
     {
         private ObservableCollection<IWindow> _windowFunctions = new ObservableCollection<IWindow>();
