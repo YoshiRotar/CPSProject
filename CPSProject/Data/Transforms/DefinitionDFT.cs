@@ -24,11 +24,8 @@ namespace CPSProject.Data.Transform
                 Complex transformValue = Complex.GetZero();
                 for(int j = 0; j < signal.Points.Count; j++)
                 {
-                    Complex core = new Complex();
-                    double exponent = (-2.0 * Math.PI * i * j) / signal.Points.Count;
-                    core.Real = Math.Cos(exponent);
-                    core.Imaginary = Math.Sin(exponent);
-                    Complex product = Complex.Multiply(signal.Points[j].Item2, core);
+                    Complex wCoefficient = GetWCoefficient(-i * j, signal.Points.Count);
+                    Complex product = Complex.Multiply(signal.Points[j].Item2, wCoefficient);
                     transformValue = Complex.Add(transformValue, product);
                 }
                 transformValue.Real = transformValue.Real/signal.Points.Count;

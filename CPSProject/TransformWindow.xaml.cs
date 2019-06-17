@@ -34,6 +34,7 @@ namespace CPSProject
         {
             DataContext = this;
             Transforms.Add(new DefinitionDFT());
+            Transforms.Add(new DecimationInTimeFFT());
             InitializeComponent();
         }
 
