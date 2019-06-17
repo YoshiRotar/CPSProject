@@ -570,6 +570,7 @@
         <Button Content="Odtwórz" Command="{Binding Path=ReconstructCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="185,275,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="-0.867,-0.1"/>
         <Button Content="Porównaj" Command="{Binding Path=CompareCommand}" HorizontalAlignment="Left" Margin="982,136,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.307,0.25"/>
         <Button Content="Filtruj" Command="{Binding Path=FilterCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="47,299,0,0" VerticalAlignment="Top" Width="126"/>
+        <Button Content="Transformuj" Command="{Binding Path=TransformCommand}" CommandParameter="1" HorizontalAlignment="Left" Margin="186,299,0,0" VerticalAlignment="Top" Width="126"/>
         <Button Content="Filtruj" Command="{Binding Path=FilterCommand}" CommandParameter="2" HorizontalAlignment="Left" Margin="481,275,0,0" VerticalAlignment="Top" Width="126"/>
         <Button Content="Filtruj" Command="{Binding Path=FilterCommand}" CommandParameter="3" HorizontalAlignment="Left" Margin="982,289,0,0" VerticalAlignment="Top" Width="126"/>
         <Button Content="Splot" Command="{Binding Path=ConvoluteCommand}" HorizontalAlignment="Left" Margin="982,160,0,0" VerticalAlignment="Top" Width="75"/>

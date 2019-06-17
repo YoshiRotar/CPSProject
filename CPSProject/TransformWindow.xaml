@@ -1,0 +1,20 @@
+﻿<Window x:Class="CPSProject.TransformWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CPSProject.Controller"
+        mc:Ignorable="d"
+        Title="Filtrowanie" Height="170" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ComboBox ItemsSource="{Binding Path=Transforms}" SelectedItem="{Binding Path=SelectedTransform}" HorizontalAlignment="Left"   
+                  Margin="182,11,0,0"   
+                  VerticalAlignment="Top"   
+                  Width="152"/>
+        <Label Content="Transformata:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="myCheckBox" IsChecked="{Binding Path=AbsoluteValue}" Margin="182,49,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label Content="Pokaż moduł:" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
+        <Button Content="Transformuj" HorizontalAlignment="Left" Margin="16,92,0,0" VerticalAlignment="Top" Width="307" Click="OkButton"/>
+    </Grid>
+</Window>

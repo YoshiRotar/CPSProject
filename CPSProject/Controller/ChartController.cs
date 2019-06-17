@@ -1,6 +1,8 @@
 ﻿using CPSProject.Data;
+using CPSProject.Data.Filters;
 using CPSProject.Data.Signal;
 using CPSProject.Data.Signal.Base;
+using CPSProject.Data.Transform;
 using CPSProject.Data.WindowFunctions;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -29,6 +31,7 @@ namespace CPSProject.Controller
         private ICommand clearCommand;
         private ICommand quantizeCommand;
         private ICommand filterCommand;
+        private ICommand transformCommand;
         private ICommand reconstructCommand;
         private ICommand compareCommand;
         private ICommand convoluteCommand;
@@ -295,6 +298,20 @@ namespace CPSProject.Controller
             }
         }
 
+        public ICommand TransformCommand
+        {
+            get
+            {
+                if (transformCommand == null)
+                {
+                    transformCommand = new RelayCommand(
+                        param => Transform(param),
+                        param => SignalExists(param));
+                }
+                return transformCommand;
+            }
+        }
+
         public ICommand ReconstructCommand
         {
             get
@@ -536,17 +553,20 @@ namespace CPSProject.Controller
             string filterDegreeText = "";
             string cutoffFrequencyText = "";
             IWindow windowFunction = null;
+            Filter filter = null;
             FilterWindow dialog = new FilterWindow();
             if (dialog.ShowDialog() == true)
             {
                 filterDegreeText = dialog.FilterDegree;
                 cutoffFrequencyText = dialog.CutoffFrequency;
                 windowFunction = dialog.SelectedWindowFunction;
+                filter = dialog.SelectedFilter;
             }
 
             if (!int.TryParse(filterDegreeText, out int filterDegree)) return;
             if (!double.TryParse(cutoffFrequencyText, out double cutoffFrequency)) return;
             if (windowFunction == null) return;
+            if (filter == null) return;
 
             ISignal signal;
             switch (param.ToString())
@@ -564,8 +584,8 @@ namespace CPSProject.Controller
                     throw new ArgumentException();
             }
 
-            LowPassFilter filterObject = new LowPassFilter(cutoffFrequency, filterDegree, windowFunction);
-            SignalImplementation filteredSignal = filterObject.Filter(signal);
+            filter.InitFilter(cutoffFrequency, filterDegree, windowFunction);
+            SignalImplementation filteredSignal = filter.FilterSignal(signal);
 
             filteredSignal.StartingMoment = filteredSignal.Points[0].Item1;
             filteredSignal.EndingMoment = filteredSignal.Points[filteredSignal.Points.Count - 1].Item1;
@@ -583,6 +603,79 @@ namespace CPSProject.Controller
             imaginaryCombinedSeries = new ScatterSeries();
 
             foreach (Tuple<double, Complex> tuple in filteredSignal.Points)
+            {
+                realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
+                imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));
+            }
+
+            ClearPlot();
+
+            realCombinedSeries.MarkerType = MarkerType.Circle;
+            imaginaryCombinedSeries.MarkerType = MarkerType.Circle;
+            realCombinedSeries.MarkerSize = 1;
+            imaginaryCombinedSeries.MarkerSize = 1;
+            realCombinedSeries.MarkerFill = OxyColors.Green;
+            imaginaryCombinedSeries.MarkerFill = OxyColors.Green;
+
+            realPlotModel.Series.Add(realCombinedSeries);
+            imaginaryPlotModel.Series.Add(imaginaryCombinedSeries);
+
+            realPlotModel.InvalidatePlot(true);
+            imaginaryPlotModel.InvalidatePlot(true);
+        }
+
+        private void Transform(object param)
+        {
+            SignalTransform transform = null;
+            bool absoluteValue = false;
+            TransformWindow dialog = new TransformWindow();
+            if (dialog.ShowDialog() == true)
+            {
+                transform = dialog.SelectedTransform;
+                absoluteValue = dialog.AbsoluteValue;
+            }
+
+            if (transform == null) return;
+
+            ISignal signal;
+            switch (param.ToString())
+            {
+                case "1":
+                    signal = FirstChart.SignalRepresentation.Signal;
+                    break;
+                case "2":
+                    signal = SecondChart.SignalRepresentation.Signal;
+                    break;
+                case "3":
+                    signal = combinedSignal.Signal;
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            SignalImplementation transformedSignal = transform.TransformSignal(signal);
+            if(absoluteValue)
+            {
+                transformedSignal = SignalOperations.GetAbsoluteSignal(transformedSignal);
+            }
+
+
+            transformedSignal.StartingMoment = transformedSignal.Points[0].Item1;
+            transformedSignal.EndingMoment = transformedSignal.Points[transformedSignal.Points.Count - 1].Item1;
+            transformedSignal.CalculateTraits();
+            combinedSignal.Signal = transformedSignal;
+
+            combinedTextProperties.AverageValueText = combinedSignal.Signal.AverageValue.ToString("N3");
+            combinedTextProperties.AbsouluteAverageValueText = combinedSignal.Signal.AbsouluteAverageValue.ToString("N3");
+            combinedTextProperties.AveragePowerText = combinedSignal.Signal.AveragePower.ToString("N3");
+            combinedTextProperties.VarianceText = combinedSignal.Signal.Variance.ToString("N3");
+            combinedTextProperties.EffectiveValueText = combinedSignal.Signal.EffectiveValue.ToString("N3");
+            OnPropertyChanged("CombinedTextProperties");
+
+            realCombinedSeries = new ScatterSeries();
+            imaginaryCombinedSeries = new ScatterSeries();
+
+            foreach (Tuple<double, Complex> tuple in transformedSignal.Points)
             {
                 realCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Real));
                 imaginaryCombinedSeries.Points.Add(new ScatterPoint(tuple.Item1, tuple.Item2.Imaginary));

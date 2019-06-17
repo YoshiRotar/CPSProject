@@ -136,5 +136,15 @@ namespace CPSProject.Data.Signal
 
             return outputSignal;
         }
+
+        public static SignalImplementation GetAbsoluteSignal(ISignal signal)
+        {
+            SignalImplementation outputSignal = new SignalImplementation();
+            foreach(Tuple<double, Complex> point in signal.Points)
+            {
+                outputSignal.Points.Add(new Tuple<double, Complex>(point.Item1, point.Item2.GetAbsouluteValue()));
+            }
+            return outputSignal;
+        }
     }
 }
