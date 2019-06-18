@@ -31,7 +31,7 @@ namespace CPSProject.Data
         public static Complex Multiply(Complex a, Complex b)
         {
             Complex result = new Complex();
-            result.Real = a.Real * b.Real + a.Imaginary * b.Imaginary;
+            result.Real = a.Real * b.Real - a.Imaginary * b.Imaginary;
             result.Imaginary = a.Real * b.Imaginary + a.Imaginary * b.Real;
             return result;
         }

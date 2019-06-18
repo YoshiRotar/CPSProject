@@ -10,13 +10,32 @@ namespace CPSProject.Data.Transform
 {
     public class DecimationInTimeFFT : SignalTransform
     {
+        private List<Complex> _wCoefficients = new List<Complex>();
+
         public override SignalImplementation TransformSignal(ISignal signal)
         {
-            if (!((signal.Points.Count & (signal.Points.Count - 1)) == 0)) throw new ArgumentException();
+            SignalImplementation cutSignal = CutSignalSamplesToPowerOfTwo(signal);
+            CalculateWCoefficients(cutSignal.Points.Count);
+            SignalImplementation result = CalculateFastTransform(cutSignal, 0);
+            foreach(Tuple<double, Complex> point in result.Points)
+            {
+                point.Item2.Real = point.Item2.Real / signal.Points.Count;
+                point.Item2.Imaginary = point.Item2.Imaginary / signal.Points.Count;
+            }
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return "FFT z decymacją w czasie";
+        }
+
+        private SignalImplementation CalculateFastTransform(ISignal signal, int recursionDepth)
+        {
             SignalImplementation evenElements = new SignalImplementation();
             SignalImplementation oddElements = new SignalImplementation();
             bool isEven = true;
-            foreach(Tuple<double, Complex> point in signal.Points)
+            foreach (Tuple<double, Complex> point in signal.Points)
             {
                 if (isEven) evenElements.Points.Add(point);
                 else oddElements.Points.Add(point);
@@ -25,8 +44,8 @@ namespace CPSProject.Data.Transform
 
             SignalImplementation evenElementsTransformed = evenElements;
             SignalImplementation oddElementsTransformed = oddElements;
-            if (evenElements.Points.Count > 1)  evenElementsTransformed = TransformSignal(evenElements);
-            if (oddElements.Points.Count > 1) oddElementsTransformed = TransformSignal(oddElements);
+            if (evenElements.Points.Count > 1) evenElementsTransformed = CalculateFastTransform(evenElements, recursionDepth+1);
+            if (oddElements.Points.Count > 1) oddElementsTransformed = CalculateFastTransform(oddElements, recursionDepth+1);
 
             SignalImplementation result = new SignalImplementation();
             result.Points.AddRange(Enumerable.Repeat(new Tuple<double, Complex>(0, Complex.GetZero()), signal.Points.Count));
@@ -34,19 +53,35 @@ namespace CPSProject.Data.Transform
             int halfOfSampleCount = signal.Points.Count / 2;
             double samplingFrequency = 1d / (signal.Points[1].Item1 - signal.Points[0].Item1);
             double f0 = samplingFrequency / signal.Points.Count;
-            for (int i=0; i<evenElements.Points.Count; i++)
+            for (int i = 0; i < evenElements.Points.Count; i++)
             {
-                Complex value = GetWCoefficient(-i, signal.Points.Count);
-                value = Complex.Multiply(value, oddElementsTransformed.Points[i].Item2);
-                result.Points[i] = new Tuple<double, Complex>(i * f0, Complex.Add(evenElementsTransformed.Points[i].Item2, value));
-                result.Points[i+halfOfSampleCount] = new Tuple<double, Complex>((i+halfOfSampleCount) * f0, Complex.Subtract(evenElementsTransformed.Points[i].Item2, value));
+                Complex product = Complex.Multiply(_wCoefficients[(int)(i*Math.Pow(2, recursionDepth))], oddElementsTransformed.Points[i].Item2);
+                result.Points[i] = new Tuple<double, Complex>(i * f0, Complex.Add(evenElementsTransformed.Points[i].Item2, product));
+                result.Points[i + halfOfSampleCount] = new Tuple<double, Complex>((i + halfOfSampleCount) * f0, Complex.Subtract(evenElementsTransformed.Points[i].Item2, product));
             }
             return result;
         }
 
-        public override string ToString()
+        private void CalculateWCoefficients(int vectorSize)
         {
-            return "FFT z decymacją w czasie";
+            int halfOfVectorSize = vectorSize / 2;
+            for(int i=0; i<halfOfVectorSize; i++)
+            {
+                _wCoefficients.Add(GetWCoefficient(-i, vectorSize));
+            }
+        }
+
+        private SignalImplementation CutSignalSamplesToPowerOfTwo(ISignal signal)
+        {
+            int powerOfTwo = 1;
+            while(powerOfTwo <= signal.Points.Count)
+            {
+                powerOfTwo *= 2;
+            }
+            powerOfTwo /= 2;
+            SignalImplementation result = new SignalImplementation();
+            result.Points.AddRange(signal.Points.GetRange(0, powerOfTwo));
+            return result;
         }
     }
 }
