@@ -37,7 +37,7 @@ namespace CPSProject.Data.Transforms
                     Real = Math.Cos(exponent) * CValue(i, signalAfterFFT.Points.Count),
                     Imaginary = 0
                 };
-                result.Points.Add(new Tuple<double, Complex>(i * f0, Complex.Multiply(signalAfterFFT.Points.ElementAt(i).Item2, complexExponent)));
+                result.Points.Add(new Tuple<double, Complex>(i * f0 / 2, Complex.Multiply(signalAfterFFT.Points.ElementAt(i).Item2, complexExponent)));
             }
             return result;
         }

@@ -21,13 +21,13 @@ namespace CPSProject.Data.Transforms
 
             for (int i = 0; i < signal.Points.Count; i++)
             {
-                double x = i * f0;
+                double x = i * f0 / 2;
                 Complex transformValue = Complex.GetZero();
                 for (int j = 0; j < signal.Points.Count; j++)
                 {
                     Complex cosCoefficient = new Complex
                     {
-                        Real = Math.Cos((Math.PI * (2 * j + 1) * i) / (2 * signal.Points.Count)),
+                        Real = Math.Cos((Math.PI * (2d * j + 1d) * i) / (2d * signal.Points.Count)),
                         Imaginary = 0d
                     };
                     Complex product = Complex.Multiply(signal.Points[j].Item2, cosCoefficient);
