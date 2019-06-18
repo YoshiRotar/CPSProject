@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPSProject.Data.Transform
+namespace CPSProject.Data.Transforms
 {
     public class DecimationInTimeFFT : SignalTransform
     {

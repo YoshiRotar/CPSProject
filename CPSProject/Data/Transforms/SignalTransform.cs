@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CPSProject.Data.Transform
+namespace CPSProject.Data.Transforms
 {
     public abstract class SignalTransform
     {
@@ -19,6 +19,18 @@ namespace CPSProject.Data.Transform
             result.Real = Math.Cos(exponent);
             result.Imaginary = Math.Sin(exponent);
             return result;
+        }
+
+        protected double CValue(int m, double N)
+        {
+            if (m != 0)
+            {
+                return Math.Sqrt(2d / N);
+            }
+            else
+            {
+                return Math.Sqrt(1d / N);
+            }
         }
     }
 }

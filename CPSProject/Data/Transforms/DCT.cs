@@ -1,14 +1,13 @@
-﻿using CPSProject.Data.Signal;
-using CPSProject.Data.Signal.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CPSProject.Data.Signal.Base;
 
 namespace CPSProject.Data.Transforms
 {
-    public class DefinitionDFT : SignalTransform
+    public class DCT : SignalTransform
     {
         public override SignalImplementation TransformSignal(ISignal signal)
         {
@@ -20,18 +19,21 @@ namespace CPSProject.Data.Transforms
             double samplingFrequency = 1d / (signal.Points[1].Item1 - signal.Points[0].Item1);
             double f0 = samplingFrequency / signal.Points.Count;
 
-            for (int i=0; i<signal.Points.Count; i++)
+            for (int i = 0; i < signal.Points.Count; i++)
             {
                 double x = i * f0;
                 Complex transformValue = Complex.GetZero();
-                for(int j = 0; j < signal.Points.Count; j++)
+                for (int j = 0; j < signal.Points.Count; j++)
                 {
-                    Complex wCoefficient = GetWCoefficient(-i * j, signal.Points.Count);
-                    Complex product = Complex.Multiply(signal.Points[j].Item2, wCoefficient);
+                    Complex cosCoefficient = new Complex
+                    {
+                        Real = Math.Cos((Math.PI * (2 * j + 1) * i) / (2 * signal.Points.Count)),
+                        Imaginary = 0d
+                    };
+                    Complex product = Complex.Multiply(signal.Points[j].Item2, cosCoefficient);
                     transformValue = Complex.Add(transformValue, product);
                 }
-                transformValue.Real = transformValue.Real/signal.Points.Count;
-                transformValue.Imaginary = transformValue.Imaginary / signal.Points.Count;
+                transformValue.Real = transformValue.Real * CValue(i, signal.Points.Count);
                 result.Points.Add(new Tuple<double, Complex>(x, transformValue));
             }
 
@@ -40,7 +42,7 @@ namespace CPSProject.Data.Transforms
 
         public override string ToString()
         {
-            return "DFT z definicji";
+            return "DCT typu drugiego";
         }
     }
 }

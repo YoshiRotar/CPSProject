@@ -1,7 +1,7 @@
 ﻿using CPSProject.Data;
 using CPSProject.Data.Filters;
 using CPSProject.Data.Signal;
-using CPSProject.Data.Transform;
+using CPSProject.Data.Transforms;
 using CPSProject.Data.WindowFunctions;
 using System;
 using System.Collections.Generic;
@@ -35,6 +35,8 @@ namespace CPSProject
             DataContext = this;
             Transforms.Add(new DefinitionDFT());
             Transforms.Add(new DecimationInTimeFFT());
+            Transforms.Add(new DCT());
+            Transforms.Add(new FCT());
             InitializeComponent();
         }
 

@@ -71,8 +71,10 @@
     <Compile Include="Data\Filters\HighPassFilter.cs" />
     <Compile Include="Data\Filters\LowPassFilter.cs" />
     <Compile Include="Data\Quantizator.cs" />
+    <Compile Include="Data\Transforms\DCT.cs" />
     <Compile Include="Data\Transforms\DecimationInTimeFFT.cs" />
     <Compile Include="Data\Transforms\DefinitionDFT.cs" />
+    <Compile Include="Data\Transforms\FCT.cs" />
     <Compile Include="Data\Transforms\SignalTransform.cs" />
     <Compile Include="Data\WindowFunctions\IWindow.cs" />
     <Compile Include="Data\Signal\SignalOperations.cs" />

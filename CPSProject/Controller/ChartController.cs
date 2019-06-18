@@ -2,7 +2,7 @@
 using CPSProject.Data.Filters;
 using CPSProject.Data.Signal;
 using CPSProject.Data.Signal.Base;
-using CPSProject.Data.Transform;
+using CPSProject.Data.Transforms;
 using CPSProject.Data.WindowFunctions;
 using OxyPlot;
 using OxyPlot.Axes;
