@@ -35,7 +35,7 @@ namespace CPSProject.Data.Transforms
                 Complex complexExponent = new Complex
                 {
                     Real = Math.Cos(exponent) * CValue(i, signalAfterFFT.Points.Count),
-                    Imaginary = Math.Sin(exponent) * CValue(i, signalAfterFFT.Points.Count)
+                    Imaginary = 0
                 };
                 result.Points.Add(new Tuple<double, Complex>(i * f0, Complex.Multiply(signalAfterFFT.Points.ElementAt(i).Item2, complexExponent)));
             }
