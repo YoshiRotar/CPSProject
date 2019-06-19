@@ -38,6 +38,7 @@ namespace CPSProject.Data.Transforms
                     Imaginary = 0
                 };
                 result.Points.Add(new Tuple<double, Complex>(i * f0 / 2, Complex.Multiply(signalAfterFFT.Points.ElementAt(i).Item2, complexExponent)));
+                result.Points[i].Item2.Imaginary = 0;
             }
             return result;
         }

@@ -661,7 +661,6 @@ namespace CPSProject.Controller
             TimeSpan elapsedTime = DateTime.Now - start;
             MessageBox.Show("Czas wykonania algorytmu: " + elapsedTime.Minutes + "m " + elapsedTime.Seconds + "s " + elapsedTime.Milliseconds + "ms");
 
-
             transformedSignal.StartingMoment = transformedSignal.Points[0].Item1;
             transformedSignal.EndingMoment = transformedSignal.Points[transformedSignal.Points.Count - 1].Item1;
             transformedSignal.CalculateTraits();
