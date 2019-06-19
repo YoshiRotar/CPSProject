@@ -659,7 +659,7 @@ namespace CPSProject.Controller
                 transformedSignal = SignalOperations.GetAbsoluteSignal(transformedSignal);
             }
             TimeSpan elapsedTime = DateTime.Now - start;
-            MessageBox.Show("Czas wykonania algorytmu: " + elapsedTime.Milliseconds + "ms");
+            MessageBox.Show("Czas wykonania algorytmu: " + elapsedTime.Minutes + "m " + elapsedTime.Seconds + "s " + elapsedTime.Milliseconds + "ms");
 
 
             transformedSignal.StartingMoment = transformedSignal.Points[0].Item1;
